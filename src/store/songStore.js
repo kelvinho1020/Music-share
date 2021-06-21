@@ -22,8 +22,14 @@ export default {
 			state.duration = helper.formatTime(state.sound.duration() - state.sound.seek());
 			state.playerProgress = `${(state.sound.seek() / state.sound.duration()) * 100}% `;
 		},
+		setClearSong(state) {
+			state.currentSong = {};
+		},
 	},
 	actions: {
+		clearSong({ commit }) {
+			commit("setClearSong");
+		},
 		progress({ commit, dispatch, state }) {
 			commit("setPosition");
 

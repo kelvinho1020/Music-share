@@ -42,7 +42,7 @@
 				</div>
 				<!-- Playlist -->
 				<ul id="playlist">
-					<SongItem v-for="song in songs" :key="song.docID" :song="song" />
+					<SongItem v-for="song in songs" :key="song.docID" :song="song" @togglePlaying="togglePlaying" @stopPlaying="stopPlaying" />
 					<div class="font-bold block text-gray-600 text-center py-8" v-if="songs.length === 0">We didn't have this {{ searchItem }} . Please go to search another keywords.</div>
 					<div class="w-full flex justify-center py-6" v-if="pendingRequest">
 						<img src="../assets/svg/loading.svg" alt="loading" />
@@ -63,7 +63,7 @@ export default {
 	setup() {
 		const songs = ref([]);
 		const totalSongs = ref("");
-		const maxPerPage = ref(7);
+		const maxPerPage = ref(10);
 		const pendingRequest = ref(false);
 
 		const search = ref("");
@@ -92,6 +92,7 @@ export default {
 			}
 			snapshots.forEach(doc => {
 				songs.value.push({
+					playing: false,
 					docID: doc.id,
 					...doc.data(),
 				});
@@ -139,19 +140,33 @@ export default {
 			}
 		};
 
+		// emit togglePlaying
+		const togglePlaying = function (val) {
+			songs.value.forEach(song => {
+				if (song.docID === val) song.playing = true;
+				else song.playing = false;
+			});
+		};
+
+		const stopPlaying = function () {
+			songs.value.forEach(song => {
+				song.playing = false;
+			});
+		};
+
 		window.addEventListener("scroll", handleScroll);
 		onBeforeUnmount(() => {
 			window.removeEventListener("scroll", handleScroll);
 		});
 
-		return { songs, getSongs, handleScroll, pendingRequest, searchItem, searchSongs, search, back, isSearching , placeholder};
+		return { songs, getSongs, handleScroll, pendingRequest, searchItem, searchSongs, search, back, isSearching, placeholder, stopPlaying, togglePlaying };
 	},
 };
 </script>
 
 <style scoped>
 .background {
-	background-image: url("../assets/img/header.png");
+	background-image: url("../assets/img/user-header.png");
 	background-size: cover;
 	animation: slide 50s linear infinite;
 	will-change: background-position;

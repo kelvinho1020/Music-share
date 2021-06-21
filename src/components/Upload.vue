@@ -21,7 +21,7 @@
 					hover:text-white hover:bg-green-400 hover:border-green-400 hover:border-solid
 				"
 				:class="{ 'bg-green-400 bordr-green-400 border-solid': is_dragover }"
-				@dragend.prevent.stop="is_dragover = false" 
+				@dragend.prevent.stop="is_dragover = false"
 				@dragover.prevent.stop="is_dragover = true"
 				@dragenter.prevent.stop="is_dragover = true"
 				@dragleave.prevent.stop="is_dragover = false"
@@ -29,8 +29,9 @@
 			>
 				<h5>Drop your files here</h5>
 			</div>
-			<input type="file" multiple @change="upload($event)" class="mt-4" />
+			<div class="font-bold block text-red-600 text-center pt-6" v-if="uploadError">Please upload a mp3 or flac</div>
 			<hr class="my-6" />
+
 			<!-- Progess Bars -->
 			<div class="mb-4" v-for="upload in uploads" :key="upload.nmae">
 				<!-- File Name -->
@@ -53,14 +54,20 @@ export default {
 	setup(prop) {
 		const is_dragover = ref(false);
 		const uploads = ref([]);
+		const uploadError = ref(false);
 
 		const upload = function (event) {
 			is_dragover.value = false;
+			uploadError.value = false;
 
 			const files = event.dataTransfer.files ? [...event.dataTransfer.files] : [...event.target.files];
 
 			files.forEach(file => {
-				if (file.type !== "audio/mpeg") return;
+				if (file.type !== "audio/mpeg" && file.type !== "audio/flac") {
+					console.log(file.type)
+					uploadError.value = true;
+					return;
+				}
 
 				const storageRef = storage.ref(); //music-xxxxx.appspot.com <= root
 				const songsRef = storageRef.child(`songs/${file.name}`); //music-xxxxx.appspot.com/songs/example.mp3 <= sub
@@ -95,7 +102,7 @@ export default {
 							display_name: auth.currentUser.displayName,
 							original_name: task.snapshot.ref.name,
 							modified_name: task.snapshot.ref.name,
-							genre: "",
+							description: "",
 							comment_count: 0,
 						};
 
@@ -119,7 +126,7 @@ export default {
 			});
 		});
 
-		return { is_dragover, upload, uploads };
+		return { is_dragover, upload, uploads, uploadError };
 	},
 };
 </script>

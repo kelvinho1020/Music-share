@@ -6,6 +6,7 @@
 		</div>
 
 		<div class="text-gray-600 text-lg">
+			<i class="fas mr-4" @click="getSong" :class="{ 'fa-play': !song.playing, 'fa-pause': song.playing }"></i>
 			<span class="comments">
 				<i class="fa fa-comments text-gray-600"></i>
 				{{ song.comment_count }}
@@ -15,9 +16,32 @@
 </template>
 
 <script>
+import { songsCollection } from "@/includes/firebase";
+import { useStore } from "vuex";
+import { ref } from "vue";
 export default {
 	props: ["song"],
 	name: "SongItem",
-	setup() {},
+	setup(prop, ctx) {
+		// Vuex
+		const store = useStore();
+		const currentSong = ref("");
+
+		const getSong = async function () {
+			ctx.emit("togglePlaying", prop.song.docID);
+
+			const docSnapshot = await songsCollection.doc(prop.song.docID).get();
+
+			if (store.getters.getSong.docID !== prop.song.docID) {
+				store.dispatch("newSong", docSnapshot.data());
+			} else {
+				store.dispatch("clearSong");
+				ctx.emit("stopPlaying", prop.song.docID);
+				store.dispatch("toggleAudio");
+			}
+		};
+
+		return { getSong, currentSong };
+	},
 };
 </script>

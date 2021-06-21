@@ -11,7 +11,7 @@
 				<div class="z-50 text-left ml-8">
 					<!-- Song Info -->
 					<div class="text-3xl font-bold">{{ song.modified_name }}</div>
-					<div>{{ song.genre }}</div>
+					<div>{{ song.description }}</div>
 				</div>
 			</div>
 		</section>
@@ -167,7 +167,7 @@ export default {
 
 <style scoped>
 .background {
-	background-image: url("../assets/img/header.png");
+	background-image: url("../assets/img/user-header.png");
 	animation: slide 50s linear infinite;
 	will-change: background-position;
 }
