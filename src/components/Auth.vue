@@ -6,7 +6,7 @@
 				<div class="absolute inset-0 bg-gray-800 opacity-75"></div>
 			</div>
 
-			<div class="inline-block bg-white rounded-lg text-left transform transition-all m-auto w-4/12">
+			<div class="inline-block bg-white rounded-lg text-left transform transition-all m-auto w-120">
 				<div class="py-4 text-left px-6">
 					<!--Title-->
 					<div class="flex justify-between items-center pb-4">
@@ -63,6 +63,7 @@ export default {
 		// Vuex
 		const store = useStore();
 		const authModalShow = computed(() => store.getters.getAuthModalShow);
+        
 		const toggleAuthModal = function () {
 			store.dispatch("toggleAuthModal");
 		};

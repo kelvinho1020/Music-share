@@ -15,6 +15,7 @@ export default {
 		defineRule("email", email);
 		defineRule("min_value", minVal);
 		defineRule("max_value", maxVal);
+		defineRule("required_song_title", required)
 		defineRule("passwords_mismatch", confirmed);
 
 		configure({
@@ -28,6 +29,7 @@ export default {
 					max_value: `The field ${ctx.field} is too high`,
 					passwords_mismatch: "The passwords don't match",
 					tos: `You must accept the Terms of Service`,
+					required_song_title: `You need to enter a song name`
 				};
 
 				const message = messages[ctx.rule.name] ? messages[ctx.rule.name] : `The field ${ctx.field} is invalid`;

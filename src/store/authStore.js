@@ -16,10 +16,8 @@ export default {
 		async register({ commit }, payload) {
 			const userCred = await auth.createUserWithEmailAndPassword(payload.email, payload.password);
 			await usersCollection.doc(userCred.user.uid).set({
-				name: payload.name,
-				email: payload.email,
-				age: payload.age,
-				country: payload.country,
+				name: payload.name.trim(),
+				email: payload.email.trim(),
 			});
 
 			userCred.user.updateProfile({
@@ -32,6 +30,18 @@ export default {
 
 			commit("setAuth");
 		},
+		async signout({ commit }, payload) {
+			await auth.signOut();
+			if (payload.route.meta.requiresAuth) payload.router.push({ name: "Home" });
+			commit("setAuth");
+		},
+		initLogin({ commit }) {
+			const user = auth.currentUser; // if no auth will be null
+
+			if (user) {
+				commit("setAuth");
+			}
+		},
 		toggleAuthModal({ commit }) {
 			commit("setAuthModal");
 		},
@@ -39,6 +49,9 @@ export default {
 	getters: {
 		getAuthModalShow(state) {
 			return state.authModalShow;
+		},
+		getUserLoggedIn(state) {
+			return state.userLoggedIn;
 		},
 	},
 };

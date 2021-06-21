@@ -25,7 +25,7 @@
 				/>
 				<ErrorMessage class="text-red-600" name="password" />
 			</div>
-			<button type="submit" class="block w-full bg-gray-600 text-white py-1.5 px-3 rounded transition hover:bg-gray-700">Submit</button>
+			<button type="submit" class="block w-full bg-gray-600 text-white py-1.5 px-3 mt-4 rounded transition hover:bg-gray-700">Submit</button>
 		</vee-form>
 	</div>
 </template>
@@ -62,6 +62,7 @@ export default {
 				loginSubmission.value = false;
 				loginAlertClass.value = "bg-red-500";
 				loginAlertMsg.value = "An Unexpected error occured. Please try again later";
+				return;
 			}
 
 			loginAlertClass.value = "bg-green-500";

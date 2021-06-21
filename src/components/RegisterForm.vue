@@ -12,7 +12,7 @@
 					class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
 					placeholder="Enter Name"
 				/>
-                <ErrorMessage class='text-red-600' name='name' />
+				<ErrorMessage class="text-red-600" name="name" />
 			</div>
 			<!-- Email -->
 			<div class="mb-3">
@@ -23,7 +23,7 @@
 					class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
 					placeholder="Enter Email"
 				/>
-                <ErrorMessage class='text-red-600' name='email' />
+				<ErrorMessage class="text-red-600" name="email" />
 			</div>
 			<!-- Password -->
 			<div class="mb-3">
@@ -34,7 +34,7 @@
 					type="password"
 					placeholder="Password"
 				/>
-                <ErrorMessage class='text-red-600' name='password' />
+				<ErrorMessage class="text-red-600" name="password" />
 			</div>
 			<!-- Confirm Password -->
 			<div class="mb-3">
@@ -45,15 +45,15 @@
 					class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
 					placeholder="Confirm Password"
 				/>
-                <ErrorMessage class='text-red-600' name='confirm_password' />
+				<ErrorMessage class="text-red-600" name="confirm_password" />
 			</div>
 			<!-- TOS -->
 			<div class="mb-3 pl-6">
 				<vee-field name="tos" value="1" type="checkbox" class="w-4 h-4 float-left -ml-6 mt-1 rounded" />
 				<label class="inline-block">Accept terms of service</label>
-                <ErrorMessage class='block text-red-600' name='tos' />
+				<ErrorMessage class="block text-red-600" name="tos" />
 			</div>
-			<button type="submit" class="block w-full bg-purple-600 text-white py-1.5 px-3 mt-4 rounded transition hover:bg-purple-700">Submit</button>
+			<button type="submit" class="block w-full bg-gray-600 text-white py-1.5 px-3 mt-4 rounded transition hover:bg-gray-700">Submit</button>
 		</vee-form>
 	</div>
 </template>
@@ -94,6 +94,7 @@ export default {
 				regShowAlert.value = true;
 				regAlertClass.value = "bg-blue-500";
 				regAlertMsg.value = "An Unexpected error occured. Please try again later";
+				return;
 			}
 
 			regAlertClass.value = "bg-green-500";

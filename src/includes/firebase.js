@@ -4,7 +4,7 @@ import "firebase/firestore";
 import "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: process.env.VUE_APP_FIREBASE_API_KEY || "api-key-not-set",
+	apiKey: process.env.VUE_APP_FIREBASE_API_KEY || "api-key-not-set",
 	authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN || "env-not-set",
 	projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID || "env-not-set",
 	storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET || "env-not-set",
@@ -22,11 +22,4 @@ const usersCollection = db.collection("users");
 const songsCollection = db.collection("songs");
 const commentsCollection = db.collection("comments");
 
-export {
-  auth,
-  db,
-  usersCollection,
-  songsCollection,
-  commentsCollection,
-  storage,
-};
+export { auth, db, usersCollection, songsCollection, commentsCollection, storage };
