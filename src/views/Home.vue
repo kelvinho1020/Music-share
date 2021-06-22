@@ -43,7 +43,7 @@
 				</div>
 				<!-- Playlist -->
 				<ul id="playlist">
-					<SongItem v-for="song in songs" :key="song.docID" :song="song" @togglePlaying="togglePlaying" @stopPlaying="stopPlaying" />
+					<SongItem v-for="song in songs" :key="song.docID" :song="song"/>
 					<div class="font-bold block text-gray-600 text-center py-8" v-if="songs.length === 0 && !pendingRequest">
 						{{ searchItem === "favorite" ? "You do not have a favorite song yet. " : `We do not have this ${searchItem}. Please go to search another keywords or input the full name.` }}
 					</div>

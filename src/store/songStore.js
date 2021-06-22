@@ -14,7 +14,7 @@ export default {
 			state.sound.volume(payload);
 		},
 		setSong(state, payload) {
-			state.currentSong = payload;
+			state.currentSong = { ...payload, isPlaying: true };
 			state.sound = new Howl({
 				src: [payload.url],
 				html5: true,
@@ -61,14 +61,12 @@ export default {
 				});
 			});
 		},
-		async toggleAudio({ state }) {
-			if (!state.sound.playing) {
-				return;
-			}
-
+		toggleAudio({ state }) {
 			if (state.sound.playing()) {
+				state.currentSong.isPlaying = false;
 				state.sound.pause();
 			} else {
+				state.currentSong.isPlaying = true;
 				state.sound.play();
 			}
 		},
@@ -97,6 +95,7 @@ export default {
 
 			return false;
 		},
+		getSound: state => state.sound,
 		getSong: state => state.currentSong,
 		getSeek: state => state.seek,
 		getDuration: state => state.duration,
