@@ -23,18 +23,21 @@
 					<span class="card-title cursor-pointer" @click="back">{{ isSearching === false ? "All Songs" : "Back" }}</span>
 					<div>
 						<input
+							v-show="searchItem !== 'favorite'"
 							type="text"
 							v-model="search"
 							class="outline-none border-b-2 text-center text-gray-800 focus:border-gray-400 transition duration-150 ease-in-out"
 							:placeholder="placeholder"
 							@keyup.enter="searchSongs"
 						/>
-						<i class="fa fa-search text-gray-400 cursor-pointer ml-1" @click="searchSongs"></i>
+						<i class="fa fa-search text-gray-400 cursor-pointer ml-1" @click="searchSongs" v-show="searchItem !== 'favorite'"></i>
 						<div class="inline-block ml-5">
 							<input type="radio" name="search" value="user" class="ml-3" id="searchUser" v-model="searchItem" />
 							<label for="searchUser" class="ml-1">User</label>
 							<input type="radio" name="search" value="song" class="ml-3" id="searchSong" v-model="searchItem" />
 							<label for="searchSong" class="ml-1">Song</label>
+							<input type="radio" name="search" value="favorite" class="ml-3" id="searchSong" v-model="searchItem" :change="filterSong" />
+							<label for="searchSong" class="ml-1">My favorite</label>
 						</div>
 					</div>
 					<!-- Icon -->
@@ -43,7 +46,9 @@
 				<!-- Playlist -->
 				<ul id="playlist">
 					<SongItem v-for="song in songs" :key="song.docID" :song="song" @togglePlaying="togglePlaying" @stopPlaying="stopPlaying" />
-					<div class="font-bold block text-gray-600 text-center py-8" v-if="songs.length === 0">We didn't have this {{ searchItem }} . Please go to search another keywords.</div>
+					<div class="font-bold block text-gray-600 text-center py-8" v-if="songs.length === 0">
+						{{ searchItem === "favorite" ? "You do not have a favorite song yet. " : `We do not have this ${searchItem}. Please go to search another keywords.` }}
+					</div>
 					<div class="w-full flex justify-center py-6" v-if="pendingRequest">
 						<img src="../assets/svg/loading.svg" alt="loading" />
 					</div>
@@ -54,13 +59,17 @@
 </template>
 
 <script>
+import { useStore } from "vuex";
 import SongItem from "../components/SongItem.vue";
-import { ref, onBeforeUnmount, computed } from "vue";
-import { songsCollection } from "../includes/firebase";
+import { ref, onBeforeUnmount, computed, watch } from "vue";
+import { songsCollection, usersCollection, auth } from "../includes/firebase";
 export default {
 	name: "Home",
 	components: { SongItem },
 	setup() {
+		// Vuex
+		const store = useStore();
+
 		const songs = ref([]);
 		const totalSongs = ref("");
 		const maxPerPage = ref(10);
@@ -92,7 +101,7 @@ export default {
 			}
 			snapshots.forEach(doc => {
 				songs.value.push({
-					playing: false,
+					playing: store.getters.getSong.docID === doc.id ? true : false,
 					docID: doc.id,
 					...doc.data(),
 				});
@@ -116,6 +125,7 @@ export default {
 			songs.value = [];
 			snapshots.forEach(doc => {
 				songs.value.push({
+					playing: store.getters.getSong.docID === doc.id ? true : false,
 					docID: doc.id,
 					...doc.data(),
 				});
@@ -125,6 +135,7 @@ export default {
 		// go back
 		const back = async function () {
 			isSearching.value = false;
+			searchItem.value = "user";
 			songs.value = [];
 			getSongs();
 		};
@@ -154,12 +165,31 @@ export default {
 			});
 		};
 
+		// filter favorite song
+		const filterSong = async function () {
+			isSearching.value = true;
+			const snapshot = await usersCollection.doc(auth.currentUser.uid).get();
+			const favorite = snapshot.data().favorite;
+			songs.value = [];
+
+			favorite.forEach(async f => {
+				const songSnap = await songsCollection.doc(f).get();
+				songs.value.push(songSnap.data());
+			});
+		};
+
+		watch(searchItem, value => {
+			if (value === "favorite") {
+				filterSong();
+			}
+		});
+
 		window.addEventListener("scroll", handleScroll);
 		onBeforeUnmount(() => {
 			window.removeEventListener("scroll", handleScroll);
 		});
 
-		return { songs, getSongs, handleScroll, pendingRequest, searchItem, searchSongs, search, back, isSearching, placeholder, stopPlaying, togglePlaying };
+		return { songs, getSongs, handleScroll, pendingRequest, searchItem, searchSongs, search, back, isSearching, placeholder, stopPlaying, filterSong, togglePlaying };
 	},
 };
 </script>

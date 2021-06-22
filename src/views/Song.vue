@@ -3,16 +3,21 @@
 		<!-- Music Header -->
 		<section class="w-full mb-8 py-14 text-center text-white relative">
 			<div class="absolute inset-0 w-full h-full box-border bg-contain background"></div>
-			<div class="container mx-auto flex items-center">
+			<div class="container mx-auto flex items-center w-full justify-between">
 				<!-- Play/Pause Button -->
-				<button type="button" class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full focus:outline-none" @click="newSong(song)">
-					<i class="fas fa-play"></i>
-				</button>
-				<div class="z-50 text-left ml-8">
-					<!-- Song Info -->
-					<div class="text-3xl font-bold">{{ song.modified_name }}</div>
-					<div>{{ song.description }}</div>
+				<div class="z-10 flex items-center">
+					<button type="button" class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full focus:outline-none" @click="newSong(song)">
+						<i class="fas fa-play"></i>
+					</button>
+					<div class="z-50 text-left ml-8">
+						<!-- Song Info -->
+						<div class="text-3xl font-bold">{{ song.modified_name }}</div>
+						<div>{{ song.description }}</div>
+					</div>
 				</div>
+				<button type="button" class="z-50 h-24 w-24 text-3xl focus:outline-none" @click="addFavorites">
+					<i class="fa-heart" :class="{ fas: isFavorite, far: !isFavorite }"></i>
+				</button>
 			</div>
 		</section>
 		<!-- Form -->
@@ -60,7 +65,7 @@
 <script>
 import { formatDistanceToNow } from "date-fns";
 import { useStore } from "vuex";
-import { songsCollection, commentsCollection, auth } from "@/includes/firebase";
+import { songsCollection, commentsCollection, usersCollection, auth } from "@/includes/firebase";
 import { useRoute, useRouter } from "vue-router";
 import { computed, ref } from "vue";
 export default {
@@ -73,7 +78,15 @@ export default {
 		const store = useStore();
 		const getUserLoggedIn = computed(() => store.getters.getUserLoggedIn);
 
-		// const formatted
+		// FvoriteSong
+		const favoriteSongs = ref([]);
+		const isFavorite = computed(() => {
+			if (favoriteSongs.value.indexOf(route.params.id) !== -1) {
+				return true;
+			} else {
+				return false;
+			}
+		});
 
 		const schema = {
 			comment: "required|min:3",
@@ -160,7 +173,37 @@ export default {
 			context.resetForm();
 		};
 
-		return { sort, getUserLoggedIn, schema, addComment, submission, showAlert, alertClass, alertMsg, newSong, song, comments, sortedComments };
+		// Favorite
+		const setFavorites = async function () {
+			const user = await usersCollection.doc(auth.currentUser.uid).get();
+			if (user.data().favorite) {
+				favoriteSongs.value = user.data().favorite;
+			}
+			console.log(user.data());
+		};
+		setFavorites();
+
+		const addFavorites = async function () {
+			try {
+				if (favoriteSongs.value.indexOf(route.params.id) === -1) {
+					favoriteSongs.value.push(route.params.id);
+					await usersCollection.doc(auth.currentUser.uid).update({
+						favorite: favoriteSongs.value,
+					});
+				} else {
+					favoriteSongs.value = favoriteSongs.value.filter(song => song !== route.params.id);
+					await usersCollection.doc(auth.currentUser.uid).update({
+						favorite: favoriteSongs.value,
+					});
+				}
+			} catch (err) {
+				console.log(err);
+			} finally {
+				setFavorites();
+			}
+		};
+
+		return { sort, getUserLoggedIn, schema, addComment, submission, showAlert, alertClass, alertMsg, newSong, song, comments, sortedComments, addFavorites, isFavorite };
 	},
 };
 </script>

@@ -18,6 +18,7 @@ export default {
 			await usersCollection.doc(userCred.user.uid).set({
 				name: payload.name.trim(),
 				email: payload.email.trim(),
+				favorite: [],
 			});
 
 			userCred.user.updateProfile({

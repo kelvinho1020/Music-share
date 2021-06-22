@@ -64,7 +64,6 @@ export default {
 
 			files.forEach(file => {
 				if (file.type !== "audio/mpeg" && file.type !== "audio/flac") {
-					console.log(file.type)
 					uploadError.value = true;
 					return;
 				}
