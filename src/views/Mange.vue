@@ -70,7 +70,7 @@ export default {
 		};
 
 		const removeSong = function (i) {
-			songs.value.splice(i, 1);
+			songs.value.splice(i + 10 * (page.value - 1), 1);
 		};
 
 		// pagination

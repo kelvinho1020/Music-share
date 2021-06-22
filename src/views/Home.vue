@@ -174,7 +174,7 @@ export default {
 
 			favorite.forEach(async f => {
 				const songSnap = await songsCollection.doc(f).get();
-				songs.value.push(songSnap.data());
+					songs.value.push(songSnap.data());
 			});
 		};
 

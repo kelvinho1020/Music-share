@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { songsCollection, storage } from "../includes/firebase";
+import { songsCollection, storage, usersCollection, auth } from "../includes/firebase";
 import { ref } from "vue";
 export default {
 	name: "CompositionItem",
@@ -115,10 +115,26 @@ export default {
 			const songRef = storageRef.child(`songs/${prop.song.original_name}`);
 
 			loading.value = true;
-			if (songRef) {
+
+			if (!songRef) {
 				await songRef.delete();
 			}
 			await songsCollection.doc(prop.song.docID).delete();
+
+			const snapshot = await usersCollection.doc(auth.currentUser.uid).get();
+			const favorite = snapshot.data().favorite;
+
+			const updateFavorite = [];
+			favorite.forEach(f => {
+				if (f !== prop.song.docID) {
+					updateFavorite.push(f);
+				}
+			});
+
+			await usersCollection.doc(auth.currentUser.uid).update({
+				favorite: updateFavorite,
+			});
+
 			loading.value = false;
 			prop.removeSong(prop.index);
 		};

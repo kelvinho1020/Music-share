@@ -179,7 +179,6 @@ export default {
 			if (user.data().favorite) {
 				favoriteSongs.value = user.data().favorite;
 			}
-			console.log(user.data());
 		};
 		setFavorites();
 
