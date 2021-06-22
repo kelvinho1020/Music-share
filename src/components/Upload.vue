@@ -48,6 +48,7 @@
 <script>
 import { storage, auth, songsCollection } from "@/includes/firebase";
 import { ref, onBeforeUnmount } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
 export default {
 	name: "upload",
 	props: ["addSong"],
@@ -55,8 +56,10 @@ export default {
 		const is_dragover = ref(false);
 		const uploads = ref([]);
 		const uploadError = ref(false);
+		const uploading = ref(false);
 
 		const upload = function (event) {
+			uploading.value = true;
 			is_dragover.value = false;
 			uploadError.value = false;
 
@@ -105,19 +108,38 @@ export default {
 							comment_count: 0,
 						};
 
-						song.url = await task.snapshot.ref.getDownloadURL(); // we get the path of the file
-						const songRef = await songsCollection.add(song);
-						const songSnapshot = await songRef.get();
+						try {
+							song.url = await task.snapshot.ref.getDownloadURL(); // we get the path of the file
+							const songRef = await songsCollection.add(song);
+							const songSnapshot = await songRef.get();
 
-						prop.addSong(songSnapshot);
+							prop.addSong(songSnapshot);
 
-						uploads.value[uploadIndex].variant = "bg-green-400";
-						uploads.value[uploadIndex].icon = "fas fa-check";
-						uploads.value[uploadIndex].text_class = "text-green-400";
+							uploads.value[uploadIndex].variant = "bg-green-400";
+							uploads.value[uploadIndex].icon = "fas fa-check";
+							uploads.value[uploadIndex].text_class = "text-green-400";
+						} catch (err) {
+							console.log(err);
+						} finally {
+							uploading.value = false;
+						}
 					}
 				);
 			});
 		};
+
+		onBeforeRouteLeave((to, from, next) => {
+			if (uploading.value) {
+				const result = confirm("You have to wait your upload finish before leaving, are you sure to leave now?");
+				if (result) {
+					next();
+				} else {
+					return;
+				}
+			} else {
+				next();
+			}
+		});
 
 		onBeforeUnmount(() => {
 			uploads.value.forEach(file => {
