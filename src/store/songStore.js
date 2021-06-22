@@ -10,11 +10,16 @@ export default {
 		playerProgress: "0%",
 	},
 	mutations: {
+		setVolume(state, payload) {
+			state.sound.volume(payload);
+		},
 		setSong(state, payload) {
 			state.currentSong = payload;
 			state.sound = new Howl({
 				src: [payload.url],
 				html5: true,
+				volume: 0.6,
+				loop: true,
 			});
 		},
 		setPosition(state) {
@@ -27,6 +32,9 @@ export default {
 		},
 	},
 	actions: {
+		changeVolume({ commit }, payload) {
+			commit("setVolume", payload);
+		},
 		clearSong({ commit }) {
 			commit("setClearSong");
 		},

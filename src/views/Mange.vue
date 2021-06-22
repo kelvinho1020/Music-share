@@ -10,13 +10,21 @@
 					<div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
 						<span class="card-title">My Songs</span>
 						<i class="fa fa-compact-disc float-right text-green-400 text-2xl"></i>
+						<i class="fa fa-search float-right text-green-400 text-2xl mr-4 cursor-pointer" @click="toggleSearch"></i>
 					</div>
+					<input
+						type="text"
+						class="outline-none border-b-2 text-center py-3 text-gray-800 focus:border-gray-400 transition duration-150 ease-in-out"
+						placeholder="search a song"
+						v-model="search"
+						v-show="showSearch"
+					/>
 					<div class="p-6">
 						<!-- Composition Items -->
-						<div class="font-bold block text-gray-600 text-center py-8" v-if="songs.length === 0">You do not have any song yet.</div>
+						<div class="font-bold block text-gray-600 text-center py-8" v-if="sliceSong.length === 0">You do not have any song yet.</div>
 						<Composition-item v-for="(song, i) in sliceSong" :updateSong="updateSong" :key="song.docID" :song="song" :index="i" :removeSong="removeSong" />
 					</div>
-					<div class="flex justify-center items-center pb-8">
+					<div class="flex justify-center items-center pb-8" v-show="!search">
 						<button class="ml-1 py-1 px-2 text-sm rounded text-white bg-gray-600 float-right focus:outline-none" @click="prev" v-show="page !== 1">
 							<i class="fas fa-arrow-left"></i>
 						</button>
@@ -41,7 +49,24 @@ export default {
 	setup() {
 		const songs = ref([]);
 		const page = ref(+1);
-		const sliceSong = computed(() => songs.value.slice(10 * (page.value - 1), 10 * page.value));
+		const search = ref("");
+		const showSearch = ref(false);
+		const sliceSong = computed(() => {
+			if (!search.value) {
+				return songs.value.slice(10 * (page.value - 1), 10 * page.value);
+			} else {
+				return songs.value.filter(song => {
+					if (song.modified_name.toLowerCase().includes(search.value.toLowerCase())) {
+						return song;
+					}
+				});
+			}
+		});
+
+		const toggleSearch = function () {
+			search.value = "";
+			showSearch.value = !showSearch.value;
+		};
 
 		const addSong = function (doc) {
 			const song = {
@@ -64,13 +89,31 @@ export default {
 		updatSongList();
 
 		// update vue after user update firestore
-		const updateSong = function (i, values) {
-			songs.value[i + 10 * (page.value - 1)].modified_name = values.modified_name;
-			songs.value[i + 10 * (page.value - 1)].description = values.description;
+		const updateSong = function (i, values, id) {
+			if (!search.value) {
+				songs.value[i + 10 * (page.value - 1)].modified_name = values.modified_name;
+				songs.value[i + 10 * (page.value - 1)].description = values.description;
+			} else {
+				songs.value.forEach(song => {
+					if (song.docID === id) {
+						song.modified_name = values.modified_name;
+						song.description = values.description;
+					}
+				});
+			}
 		};
 
-		const removeSong = function (i) {
-			songs.value.splice(i + 10 * (page.value - 1), 1);
+		const removeSong = function (i, id) {
+			if (!search.value) {
+				songs.value.splice(i + 10 * (page.value - 1), 1);
+			} else {
+				search.value = "";
+				songs.value = songs.value.filter(song => {
+					if (song.docID !== id) {
+						return song;
+					}
+				});
+			}
 		};
 
 		// pagination
@@ -81,7 +124,7 @@ export default {
 			page.value -= 1;
 		};
 
-		return { songs, addSong, updateSong, removeSong, sliceSong, next, prev, page };
+		return { songs, addSong, updateSong, removeSong, sliceSong, next, prev, page, search, toggleSearch, showSearch };
 	},
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-	<li class="flex justify-between items-center p-3 pl-6 cursor-pointer transition duration-300 hover:bg-gray-50">
+	<li class="flex justify-between items-center p-3 pl-6 cursor-pointer transition duration-300 hover:bg-gray-50" :class="{ 'bg-gray-100': song.playing }">
 		<div>
 			<router-link :to="{ name: 'Song', params: { id: song.docID } }" class="font-bold block text-gray-600">{{ song.modified_name }} </router-link>
 			<span class="text-gray-500 text-sm">{{ song.display_name }}</span>
@@ -21,6 +21,7 @@ import { useStore } from "vuex";
 import { ref } from "vue";
 export default {
 	props: ["song"],
+	emit: ["togglePlaying", "stopPlaying"],
 	name: "SongItem",
 	setup(prop, ctx) {
 		// Vuex

@@ -7,12 +7,10 @@
 				<div class="relative text-white main-header-content z-10">
 					<h1 class="font-bold text-5xl mb-5">Listen to great music</h1>
 					<p class="w-full md:w-8/12 mx-auto">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et dolor mollis, congue augue non, venenatis elit. Nunc justo eros, suscipit ac aliquet imperdiet, venenatis et sapien.
-						Duis sed magna pulvinar, fringilla lorem eget, ullamcorper urna.
+						Welcome to this website, this is a place for you to share your favorite music
 					</p>
 				</div>
 			</div>
-
 			<img class="relative block mx-auto mt-5 -mb-20 w-auto max-w-full" src="../assets/img/introduction-music.png" />
 		</section>
 
@@ -46,8 +44,8 @@
 				<!-- Playlist -->
 				<ul id="playlist">
 					<SongItem v-for="song in songs" :key="song.docID" :song="song" @togglePlaying="togglePlaying" @stopPlaying="stopPlaying" />
-					<div class="font-bold block text-gray-600 text-center py-8" v-if="songs.length === 0">
-						{{ searchItem === "favorite" ? "You do not have a favorite song yet. " : `We do not have this ${searchItem}. Please go to search another keywords.` }}
+					<div class="font-bold block text-gray-600 text-center py-8" v-if="songs.length === 0 && !pendingRequest">
+						{{ searchItem === "favorite" ? "You do not have a favorite song yet. " : `We do not have this ${searchItem}. Please go to search another keywords or input the full name.` }}
 					</div>
 					<div class="w-full flex justify-center py-6" v-if="pendingRequest">
 						<img src="../assets/svg/loading.svg" alt="loading" />

@@ -104,13 +104,18 @@ export default {
 				console.log(err);
 				return;
 			}
-			prop.updateSong(prop.index, values);
+
+			prop.updateSong(prop.index, values, prop.song.docID);
 
 			alertClass.value = "bg-green-500";
 			alertMsg.value = "Success";
 		};
 
 		const deleteSong = async function () {
+			// confirm delete
+			let result = confirm("Are you sure to delete this song?");
+			if (!result) return;
+
 			const storageRef = storage.ref();
 			const songRef = storageRef.child(`songs/${prop.song.original_name}`);
 
@@ -136,7 +141,7 @@ export default {
 			});
 
 			loading.value = false;
-			prop.removeSong(prop.index);
+			prop.removeSong(prop.index, prop.song.docID);
 		};
 
 		return { schema, showForm, submitting, showAlert, alertClass, alertMsg, edit, deleteSong, loading, mdName, description };

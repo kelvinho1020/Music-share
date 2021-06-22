@@ -35,7 +35,7 @@
 			<!-- Progess Bars -->
 			<div class="mb-4" v-for="upload in uploads" :key="upload.nmae">
 				<!-- File Name -->
-				<div class="font-bold text-sm" :class="upload.text_class">{{ upload.name.length > 20 ? upload.name.slice(0, 20) + "..." : upload.name }}<i :class="upload.icon" class="ml-4"></i></div>
+				<div class="font-bold text-sm" :class="upload.text_class">{{ upload.name.length > 30 ? upload.name.slice(0, 30) + "..." : upload.name }}<i :class="upload.icon" class="ml-4"></i></div>
 				<div class="flex h-4 overflow-hidden bg-gray-200 rounded">
 					<!-- Inner Progress Bar -->
 					<div class="transition-all progress-bar" :style="{ width: upload.current_progress + '%' }" :class="upload.variant"></div>
