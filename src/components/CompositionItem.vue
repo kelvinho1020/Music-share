@@ -15,7 +15,8 @@
 			</div>
 			<div v-show="showForm">
 				<div class="text-white text-center font-bold p-4 my-4" :class="alertClass" v-if="submitting">{{ alertMsg }}</div>
-				<vee-form class="mt-4" :validation-schema="schema" :initial-values="song" @submit="edit">
+				<vee-form class="mt-4" :validation-schema="schema" @submit="edit">
+					<!-- :initial-values="song" -->
 					<div class="mb-3">
 						<label class="inline-block mb-2">Song Title</label>
 						<vee-field
@@ -23,6 +24,7 @@
 							type="text"
 							class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
 							placeholder="Enter Song Title"
+							v-model="mdName"
 						/>
 						<ErrorMessage class="text-red-600" name="modified_name" />
 					</div>
@@ -34,6 +36,7 @@
 							type="text"
 							class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
 							placeholder="Enter description"
+							v-model="description"
 						/>
 						<ErrorMessage class="text-red-600" name="description" />
 					</div>
@@ -67,18 +70,16 @@ export default {
 			type: Function,
 			required: true,
 		},
-		updateUnsavedFlag: {
-			type: Function,
-		},
 	},
 	setup(prop) {
 		const showForm = ref(false);
-
 		const submitting = ref(false);
 		const showAlert = ref(false);
 		const alertClass = ref("bg-blue-500");
 		const alertMsg = ref("Please wait! Updating song info");
 		const loading = ref(false);
+		const mdName = ref(prop.song.modified_name);
+		const description = ref(prop.song.description);
 
 		const schema = ref({
 			modified_name: "required_song_title|min:1|max:30|",
@@ -93,16 +94,18 @@ export default {
 
 			try {
 				await songsCollection.doc(prop.song.docID).update({
-					...values,
-					modified_name: values.modified_name.trim(),
+					...prop.song,
+					modified_name: mdName.value.trim(),
+					description: description.value.trim(),
 				});
 			} catch (err) {
 				alertClass.value = "bg-red-500";
 				alertMsg.value = "Something went wrong! Try again later";
+				console.log(err);
 				return;
 			}
 			prop.updateSong(prop.index, values);
-			prop.updateUnsavedFlag(false);
+
 			alertClass.value = "bg-green-500";
 			alertMsg.value = "Success";
 		};
@@ -112,13 +115,15 @@ export default {
 			const songRef = storageRef.child(`songs/${prop.song.original_name}`);
 
 			loading.value = true;
-			await songRef.delete();
+			if (songRef) {
+				await songRef.delete();
+			}
 			await songsCollection.doc(prop.song.docID).delete();
 			loading.value = false;
 			prop.removeSong(prop.index);
 		};
 
-		return { schema, showForm, submitting, showAlert, alertClass, alertMsg, edit, deleteSong, loading };
+		return { schema, showForm, submitting, showAlert, alertClass, alertMsg, edit, deleteSong, loading, mdName, description };
 	},
 };
 </script>
