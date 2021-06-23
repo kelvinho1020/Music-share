@@ -41,7 +41,7 @@
 				</div>
 				<!-- Playlist -->
 				<ul id="playlist">
-					<SongItem v-for="song in songs" :key="song.docID" :song="song" />
+					<SongItem v-for="song in formatSongs" :key="song.docID" :song="song" />
 					<div class="font-bold block text-gray-600 text-center py-8" v-if="songs.length === 0 && !pendingRequest">
 						{{ searchItem === "favorite" ? "You do not have a favorite song yet. " : `We do not have this ${searchItem}. Please go to search another keywords or input the full name.` }}
 					</div>
@@ -76,6 +76,12 @@ export default {
 		const searchItem = ref("user");
 		const isSearching = ref(false);
 
+		// format time
+		const formatSongs = computed(() =>
+			songs.value.map(song => {
+				return { ...song, createdAt: format(fromUnixTime(song.createdAt.seconds), "MM/dd/yyyy") };
+			})
+		);
 		const placeholder = computed(() => `search a ${searchItem.value}`);
 
 		const getSongs = async function () {
@@ -101,7 +107,6 @@ export default {
 					playing: store.getters.getSong.docID === doc.id ? true : false,
 					docID: doc.id,
 					...doc.data(),
-					createdAt: format(fromUnixTime(doc.data().createdAt.seconds), "MM/dd/yyyy"),
 				});
 			});
 
@@ -187,7 +192,7 @@ export default {
 			window.removeEventListener("scroll", handleScroll);
 		});
 
-		return { songs, getSongs, handleScroll, pendingRequest, searchItem, searchSongs, search, back, isSearching, placeholder, stopPlaying, filterSong, togglePlaying };
+		return { formatSongs, songs, getSongs, handleScroll, pendingRequest, searchItem, searchSongs, search, back, isSearching, placeholder, stopPlaying, filterSong, togglePlaying };
 	},
 };
 </script>
