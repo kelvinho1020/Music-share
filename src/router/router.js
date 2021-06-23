@@ -25,7 +25,7 @@ const routes = [
 		component: Mange,
 		meta: {
 			requiresAuth: true,
-			title: 'Music-share | Mange'
+			title: 'Music-share | Manage'
 		},
 		beforeEnter: requireAuth,
 	},
@@ -41,7 +41,7 @@ const routes = [
 		path: "/:catchAll(.*)*",
 		redirect: { name: "Home" },
 		meta: {
-			title: 'Music-share | Not Found'
+			title: 'Music-share'
 		},
 	},
 ];
