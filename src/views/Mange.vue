@@ -14,7 +14,7 @@
 					</div>
 					<input
 						type="text"
-						class="outline-none border-b-2 text-center py-3 text-gray-800 focus:border-gray-400 transition duration-150 ease-in-out dark:text-white"
+						class="bg-gray-50 outline-none border-b-2 text-center py-3 text-gray-800 focus:border-gray-400 transition duration-150 ease-in-out dark:text-white dark:bg-gray-500 dark:focus:border-white "
 						placeholder="search a song"
 						v-model="search"
 						v-show="showSearch"
