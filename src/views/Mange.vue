@@ -6,29 +6,29 @@
 				<Upload :addSong="addSong" />
 			</div>
 			<div class="col-span-2 mb-16">
-				<div class="bg-white rounded border border-gray-200 relative flex flex-col">
+				<div class="bg-white rounded border border-gray-200 relative flex flex-col dark:bg-gray-600 dark:border-white">
 					<div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
-						<span class="card-title">My Songs</span>
+						<span class="card-title dark:text-white">My Songs</span>
 						<i class="fa fa-compact-disc float-right text-green-400 text-2xl"></i>
 						<i class="fa fa-search float-right text-green-400 text-2xl mr-4 cursor-pointer" @click="toggleSearch"></i>
 					</div>
 					<input
 						type="text"
-						class="outline-none border-b-2 text-center py-3 text-gray-800 focus:border-gray-400 transition duration-150 ease-in-out"
+						class="outline-none border-b-2 text-center py-3 text-gray-800 focus:border-gray-400 transition duration-150 ease-in-out dark:text-white"
 						placeholder="search a song"
 						v-model="search"
 						v-show="showSearch"
 					/>
 					<div class="p-6">
 						<!-- Composition Items -->
-						<div class="font-bold block text-gray-600 text-center py-8" v-if="sliceSong.length === 0">You do not have any song yet.</div>
+						<div class="font-bold block text-gray-600 text-center py-8 dark:text-white" v-if="sliceSong.length === 0">You do not have any song yet.</div>
 						<Composition-item v-for="(song, i) in sliceSong" :updateSong="updateSong" :key="song.docID" :song="song" :index="i" :removeSong="removeSong" />
 					</div>
 					<div class="flex justify-center items-center pb-8" v-show="!search">
-						<button class="ml-1 py-1 px-2 text-sm rounded text-white bg-gray-600 float-right focus:outline-none" @click="prev" v-show="page !== 1">
+						<button class="ml-1 py-1 px-2 text-sm rounded text-white bg-gray-600 float-right focus:outline-none dark:bg-gray-800" @click="prev" v-show="page !== 1">
 							<i class="fas fa-arrow-left"></i>
 						</button>
-						<button class="ml-1 py-1 px-2 text-sm rounded text-white bg-gray-600 float-right focus:outline-none" @click="next" v-show="songs[songs.length - 1] !== sliceSong[sliceSong.length - 1]">
+						<button class="ml-1 py-1 px-2 text-sm rounded text-white bg-gray-600 float-right focus:outline-none dark:bg-gray-800" @click="next" v-show="songs[songs.length - 1] !== sliceSong[sliceSong.length - 1]">
 							<i class="fas fa-arrow-right"></i>
 						</button>
 					</div>

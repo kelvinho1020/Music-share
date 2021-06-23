@@ -1,8 +1,8 @@
 <template>
-	<div>
+	<div class='pb-10'>
 		<!-- Music Header -->
 		<section class="w-full mb-8 py-14 text-center text-white relative">
-			<div class="absolute inset-0 w-full h-full box-border bg-contain background"></div>
+			<div class="absolute inset-0 w-full h-full box-border bg-contain" :class="{ 'background-dark': theme === 'dark', 'background-light': theme === 'light' }"></div>
 			<div class="container mx-auto flex items-center w-full justify-between">
 				<!-- Play/Pause Button -->
 				<div class="z-10 flex items-center">
@@ -23,10 +23,10 @@
 		</section>
 		<!-- Form -->
 		<section class="container mx-auto mt-6">
-			<div class="bg-white rounded border border-gray-200 relative flex flex-col">
+			<div class="bg-white rounded border border-gray-200 relative flex flex-col dark:bg-gray-600">
 				<div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
 					<!-- Comment Count -->
-					<span class="card-title">{{ comments.length }} comments</span>
+					<span class="card-title dark:text-white">{{ comments.length }} comments</span>
 					<i class="fa fa-comments float-right text-green-400 text-2xl"></i>
 				</div>
 				<div class="p-6">
@@ -35,14 +35,14 @@
 						<vee-field
 							as="textarea"
 							name="comment"
-							class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded mb-4"
+							class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded dark:bg-gray-700 dark:text-white"
 							placeholder="Your comment here..."
 						></vee-field>
-						<ErrorMessage class="text-red-600" name="comment" />
-						<button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600 block">Submit</button>
+						<ErrorMessage class="text-red-600 " name="comment" />
+						<button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600 block mt-4">Submit</button>
 					</vee-form>
 					<!-- Sort Comments -->
-					<select class="block mt-4 py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded" v-model="sort">
+					<select class="block mt-4 py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded focus:outline-none" v-model="sort">
 						<option value="1">Latest</option>
 						<option value="2">Oldest</option>
 					</select>
@@ -50,8 +50,8 @@
 			</div>
 		</section>
 		<!-- Comments -->
-		<ul class="container mx-auto mb-20">
-			<li class="p-6 bg-gray-50 border border-gray-200" v-for="comment in sortedComments" :key="comment.docID">
+		<ul class="container mx-auto mb-20 ">
+			<li class="p-6 bg-gray-50 border border-gray-200 dark:bg-gray-600 dark:text-white" v-for="comment in sortedComments" :key="comment.docID">
 				<!-- Comment Author -->
 				<div class="mb-3">
 					<div class="font-bold">{{ comment.name }}</div>
@@ -79,6 +79,8 @@ export default {
 		// Vuex
 		const store = useStore();
 		const getUserLoggedIn = computed(() => store.getters.getUserLoggedIn);
+
+		const theme = computed(() => store.getters.getTheme);
 
 		// FvoriteSong
 		const favoriteSongs = ref([]);
@@ -214,14 +216,19 @@ export default {
 			}
 		};
 
-		return { sort, getUserLoggedIn, schema, addComment, submission, showAlert, alertClass, alertMsg, newSong, song, comments, sortedComments, addFavorites, isFavorite };
+		return { sort, getUserLoggedIn, schema, addComment, submission, showAlert, alertClass, alertMsg, newSong, song, comments, sortedComments, addFavorites, isFavorite, theme };
 	},
 };
 </script>
 
 <style scoped>
-.background {
+.background-light {
 	background-image: url("../assets/img/user-header.png");
+	animation: slide 50s linear infinite;
+	will-change: background-position;
+}
+.background-dark {
+	background-image: url("../assets/img/song-header.png");
 	animation: slide 50s linear infinite;
 	will-change: background-position;
 }

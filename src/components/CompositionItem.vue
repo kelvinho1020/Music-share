@@ -5,11 +5,11 @@
 		</div>
 		<div class="border border-gray-200 p-3 mb-4 rounded">
 			<div>
-				<h4 class="inline-block text-2xl font-bold">{{ song.modified_name.length >= 20 ? song.modified_name.slice(0, 30) + "..." : song.modified_name }}</h4>
-				<button class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right" @click="deleteSong">
+				<h4 class="inline-block text-2xl font-bold dark:text-white">{{ song.modified_name.length >= 20 ? song.modified_name.slice(0, 30) + "..." : song.modified_name }}</h4>
+				<button class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right focus:outline-none" @click="deleteSong">
 					<i class="fa fa-times"></i>
 				</button>
-				<button class="ml-1 py-1 px-2 text-sm rounded text-white bg-blue-600 float-right" @click="(showForm = true), (submitting = false)">
+				<button class="ml-1 py-1 px-2 text-sm rounded text-white bg-blue-600 float-right focus:outline-none" @click="(showForm = true), (submitting = false)">
 					<i class="fa fa-pencil-alt"></i>
 				</button>
 			</div>
@@ -18,30 +18,30 @@
 				<vee-form class="mt-4" :validation-schema="schema" @submit="edit">
 					<!-- :initial-values="song" -->
 					<div class="mb-3">
-						<label class="inline-block mb-2">Song Title</label>
+						<label class="inline-block mb-2 dark:text-white">Song Title</label>
 						<vee-field
 							name="modified_name"
 							type="text"
-							class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
+							class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded dark:bg-gray-700 dark:text-white dark:focus:border-gray-50"
 							placeholder="Enter Song Title"
 							v-model="mdName"
 						/>
 						<ErrorMessage class="text-red-600" name="modified_name" />
 					</div>
 					<div class="mb-6">
-						<label class="inline-block mb-2">Description</label>
+						<label class="inline-block mb-2 dark:text-white">Description</label>
 						<vee-field
 							as="textarea"
 							name="description"
 							type="text"
-							class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
+							class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded dark:bg-gray-700 dark:text-white dark:focus:border-gray-50"
 							placeholder="Enter description"
 							v-model="description"
 						/>
 						<ErrorMessage class="text-red-600" name="description" />
 					</div>
-					<button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600">Submit</button>
-					<button type="button" class="py-1.5 px-3 rounded text-white bg-gray-600 ml-4" @click="showForm = false">Go Back</button>
+					<button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600 focus:outline-none">Submit</button>
+					<button type="button" class="py-1.5 px-3 rounded text-white bg-gray-600 ml-4 dark:bg-white focus:outline-none dark:text-gray-600" @click="showForm = false">Go Back</button>
 				</vee-form>
 			</div>
 		</div>

@@ -1,9 +1,9 @@
 <template>
-	<div>
+	<div class="dark:bg-gray-700">
 		<!-- Introduction -->
 		<section class="mb-8 py-20 text-white text-center relative">
 			<div class="container mx-auto">
-				<div class="absolute inset-0 w-full h-full bg-contain introduction-bg background"></div>
+				<div class="absolute inset-0 w-full h-full bg-contain introduction-bg" :class="{ 'background-dark': theme === 'dark', 'background-light': theme === 'light' }"></div>
 				<div class="relative text-white main-header-content z-10">
 					<h1 class="font-bold text-5xl mb-5">Listen to great music</h1>
 					<p class="w-full md:w-8/12 mx-auto">Welcome to this website, this is a place for you to share your favorite music</p>
@@ -14,26 +14,26 @@
 
 		<!-- Main Content -->
 		<section class="container mx-auto pb-20">
-			<div class="bg-white rounded border border-gray-200 relative flex flex-col">
-				<div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200 flex justify-between">
-					<span class="card-title cursor-pointer" @click="back">{{ isSearching === false ? "All Songs" : "Back" }}</span>
+			<div class="bg-white rounded border border-gray-200 relative flex flex-col dark:bg-gray-600 dark:border-white">
+				<div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200 flex justify-between dark:border-white">
+					<span class="card-title cursor-pointer dark:text-white" @click="back">{{ isSearching === false ? "All Songs" : "Back" }}</span>
 					<div>
 						<input
 							v-show="searchItem !== 'favorite'"
 							type="text"
 							v-model="search"
-							class="outline-none border-b-2 text-center text-gray-800 focus:border-gray-400 transition duration-150 ease-in-out"
+							class="outline-none border-b-2 text-center text-gray-800 focus:border-gray-400 dark:bg-gray-600 dark:text-white dark:focus:border-white"
 							:placeholder="placeholder"
 							@keyup.enter="searchSongs"
 						/>
-						<i class="fa fa-search text-gray-400 cursor-pointer ml-1" @click="searchSongs" v-show="searchItem !== 'favorite'"></i>
+						<i class="fa fa-search text-gray-400 cursor-pointer ml-1 dark:text-white" @click="searchSongs" v-show="searchItem !== 'favorite'"></i>
 						<div class="inline-block ml-5">
 							<input type="radio" name="search" value="user" class="ml-3" id="searchUser" v-model="searchItem" />
-							<label for="searchUser" class="ml-1">User</label>
+							<label for="searchUser" class="ml-1 dark:text-white">User</label>
 							<input type="radio" name="search" value="song" class="ml-3" id="searchSong" v-model="searchItem" />
-							<label for="searchSong" class="ml-1">Song</label>
+							<label for="searchSong" class="ml-1 dark:text-white">Song</label>
 							<input type="radio" name="search" value="favorite" class="ml-3" id="searchSong" v-model="searchItem" :change="filterSong" />
-							<label for="searchSong" class="ml-1">My favorite</label>
+							<label for="searchSong" class="ml-1 dark:text-white">My favorite</label>
 						</div>
 					</div>
 					<!-- Icon -->
@@ -76,6 +76,8 @@ export default {
 		const search = ref("");
 		const searchItem = ref("user");
 		const isSearching = ref(false);
+
+		const theme = computed(() => store.getters.getTheme);
 
 		// format time
 		const formatSongs = computed(() =>
@@ -193,14 +195,21 @@ export default {
 			window.removeEventListener("scroll", handleScroll);
 		});
 
-		return { formatSongs, songs, getSongs, handleScroll, pendingRequest, searchItem, searchSongs, search, back, isSearching, placeholder, stopPlaying, filterSong, togglePlaying , totalSongs};
+		return { formatSongs, songs, getSongs, handleScroll, pendingRequest, searchItem, searchSongs, search, back, isSearching, placeholder, stopPlaying, filterSong, togglePlaying, totalSongs, theme };
 	},
 };
 </script>
 
 <style scoped>
-.background {
+.background-light {
 	background-image: url("../assets/img/user-header.png");
+	background-size: cover;
+	animation: slide 50s linear infinite;
+	will-change: background-position;
+}
+
+.background-dark {
+	background-image: url("../assets/img/song-header.png");
 	background-size: cover;
 	animation: slide 50s linear infinite;
 	will-change: background-position;

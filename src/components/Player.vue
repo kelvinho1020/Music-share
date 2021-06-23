@@ -1,25 +1,25 @@
 <template>
-	<div class="fixed bottom-0 left-0 bg-gray-50 p-5 pb-4 text-left align-top w-full h-16 pl-10" v-show="song.modified_name">
+	<div class="fixed bottom-0 left-0 bg-gray-600 p-5 pb-4 text-left align-top w-full h-16 pl-10 dark:bg-white" v-show="song.modified_name">
 		<div class="relative">
 			<!-- Play/Pause Button -->
 			<div class="float-left w-7 h-7 leading-3">
 				<button class="focus:outline-none" type="button" @click="toggleAudio">
-					<i class="fa text-gray-500 text-xl focus:outline-none" :class="{ 'fa-play': !playing, 'fa-pause': playing }"></i>
+					<i class="fa text-white text-xl focus:outline-none dark:text-gray-500" :class="{ 'fa-play': !playing, 'fa-pause': playing }"></i>
 				</button>
 			</div>
 			<!-- Current Position -->
-			<div class="float-left w-7 h-7 leading-3 text-gray-400 mt-0 text-lg w-14 ml-5 mt-1">
+			<div class="float-left w-7 h-7 leading-3 text-gray-50 mt-0 text-lg w-14 ml-6 mt-1 dark:text-gray-500">
 				<span class="player-currenttime">{{ seek }}</span>
 			</div>
 			<!-- Scrub -->
-			<div class="float-left w-7 h-7 leading-3 ml-7 mt-2 player-scrub">
+			<div class="float-left w-7 h-7 leading-3 ml-6 mt-2 player-scrub">
 				<div class="absolute left-0 right-5 text-lg text-center mx-auto player-song-info">
-					<span class="song-title">{{ song.modified_name }}</span>
+					<span class="song-title text-white dark:text-gray-800">{{ song.modified_name }}</span>
 				</div>
 				<!-- Scrub Container  -->
 				<span class="block w-full h-2 rounded m-1 mt-2 bg-gray-200 relative cursor-pointer" @click.prevent="updateSeek($event)">
 					<!-- Player Ball -->
-					<span class="absolute top-neg-8 text-gray-800 text-lg" :style="{ left: playerProgress }">
+					<span class="absolute top-neg-8 text-white text-lg dark:text-gray-500" :style="{ left: playerProgress }">
 						<i class="fas fa-circle"></i>
 					</span>
 					<!-- Player Progress Bar-->
@@ -27,12 +27,12 @@
 				</span>
 			</div>
 			<!-- Duration -->
-			<div class="float-left w-7 h-7 leading-3 text-gray-400 mt-0 text-lg w-14 ml-8 mt-1">
+			<div class="float-left w-7 h-7 leading-3 text-gray-50 mt-0 text-lg w-14 ml-8 mt-1 dark:text-gray-500">
 				<span class="player-duration">{{ duration }}</span>
 			</div>
 			<div class="flex justify-center items-center">
 				<div class="inline-block">
-					<i class="fa fa-volume-up text-gray-500 text-xl cursor-pointer"></i>
+					<i class="fa fa-volume-up text-white text-xl cursor-pointer dark:text-gray-600"></i>
 				</div>
 				<div class="inline-block">
 					<input type="range" v-model="slider" min="0" max="100" id="slider" class="slider w-3/4 ml-3 bg-gray-200 rounded focus:outline-none" @change="changeVolume" />

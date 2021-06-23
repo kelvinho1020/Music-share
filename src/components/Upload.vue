@@ -1,7 +1,7 @@
 <template>
-	<div class="bg-white rounded border border-gray-200 relative flex flex-col">
+	<div class="bg-white rounded border border-gray-200 relative flex flex-col dark:bg-gray-600 dark:border-white">
 		<div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
-			<span class="card-title">Upload</span>
+			<span class="card-title dark:text-white">Upload</span>
 			<i class="fas fa-upload float-right text-green-400 text-2xl"></i>
 		</div>
 		<div class="p-6">
@@ -19,6 +19,7 @@
 					transition
 					duration-500
 					hover:text-white hover:bg-green-400 hover:border-green-400 hover:border-solid
+					dark:text-white
 				"
 				:class="{ 'bg-green-400 bordr-green-400 border-solid': is_dragover }"
 				@dragend.prevent.stop="is_dragover = false"
@@ -35,7 +36,9 @@
 			<!-- Progess Bars -->
 			<div class="mb-4" v-for="upload in uploads" :key="upload.nmae">
 				<!-- File Name -->
-				<div class="font-bold text-sm" :class="upload.text_class">{{ upload.name.length > 30 ? upload.name.slice(0, 30) + "..." : upload.name }}<i :class="upload.icon" class="ml-4"></i></div>
+				<div class="font-bold text-sm dark:text-white mb-2" :class="upload.text_class">
+					{{ upload.name.length > 30 ? upload.name.slice(0, 30) + "..." : upload.name }}<i :class="upload.icon" class="ml-4"></i>
+				</div>
 				<div class="flex h-4 overflow-hidden bg-gray-200 rounded">
 					<!-- Inner Progress Bar -->
 					<div class="transition-all progress-bar" :style="{ width: upload.current_progress + '%' }" :class="upload.variant"></div>

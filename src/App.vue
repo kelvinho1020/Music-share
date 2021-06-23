@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="bg-gray-50 dark:bg-gray-700 min-h-screen">
 		<!-- Header -->
 		<Header />
 
@@ -17,6 +17,7 @@
 import Player from "@/components/Player";
 import Header from "@/components/Header";
 import Auth from "@/components/Auth";
+import { onBeforeMount, computed, watch } from "vue";
 import { useStore } from "vuex";
 export default {
 	name: "App",
@@ -24,8 +25,20 @@ export default {
 	setup() {
 		// Vuex
 		const store = useStore();
+		const theme = computed(() => store.getters.getTheme);
 
-		store.dispatch("initLogin");
+		onBeforeMount(() => {
+			store.dispatch("initLogin");
+			store.dispatch("initTheme");
+		});
+
+		watch(theme, newTheme => {
+			if (newTheme === "light") {
+				document.querySelector("html").classList.remove("dark");
+			} else {
+				document.querySelector("html").classList.add("dark");
+			}
+		});
 	},
 };
 </script>
