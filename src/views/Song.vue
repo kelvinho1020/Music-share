@@ -35,14 +35,14 @@
 						<vee-field
 							as="textarea"
 							name="comment"
-							class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded dark:bg-gray-700 dark:text-white"
+							class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded dark:bg-gray-700 dark:text-white dark:focus:border-gray-50"
 							placeholder="Your comment here..."
 						></vee-field>
 						<ErrorMessage class="text-red-600 " name="comment" />
 						<button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600 block mt-4">Submit</button>
 					</vee-form>
 					<!-- Sort Comments -->
-					<select class="block mt-4 py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded focus:outline-none" v-model="sort">
+					<select class="block mt-4 py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded focus:outline-none dark:focus:border-gray-50" v-model="sort">
 						<option value="1">Latest</option>
 						<option value="2">Oldest</option>
 					</select>
