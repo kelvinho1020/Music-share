@@ -92,7 +92,7 @@ export default {
 			} catch (err) {
 				regSubmission.value = true;
 				regShowAlert.value = true;
-				regAlertClass.value = "bg-blue-500";
+				regAlertClass.value = "bg-red-500";
 				regAlertMsg.value = "An Unexpected error occured. Please try again later";
 				return;
 			}

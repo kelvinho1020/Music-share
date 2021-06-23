@@ -13,6 +13,7 @@
 						<!-- Song Info -->
 						<div class="text-3xl font-bold">{{ song.modified_name }}</div>
 						<div>{{ song.description }}</div>
+						<div>{{ song.createdAt }}</div>
 					</div>
 				</div>
 				<button type="button" class="z-50 h-24 w-24 text-3xl focus:outline-none" @click="addFavorites">
@@ -63,7 +64,7 @@
 </template>
 
 <script>
-import { formatDistanceToNow } from "date-fns";
+import { fromUnixTime, formatDistanceToNow, format } from "date-fns";
 import { useStore } from "vuex";
 import { songsCollection, commentsCollection, usersCollection, auth } from "@/includes/firebase";
 import { useRoute, useRouter } from "vue-router";
@@ -112,6 +113,7 @@ export default {
 				return;
 			}
 			song.value = docSnapshot.data();
+			song.value.createdAt = format(fromUnixTime(song.value.createdAt.seconds), "MM/dd/yyyy");
 		};
 		getSong();
 
@@ -189,10 +191,17 @@ export default {
 					await usersCollection.doc(auth.currentUser.uid).update({
 						favorite: favoriteSongs.value,
 					});
+
+					await songsCollection.doc(song.value.docID).update({
+						favorite_count: +song.value.favorite_count + 1,
+					});
 				} else {
 					favoriteSongs.value = favoriteSongs.value.filter(song => song !== route.params.id);
 					await usersCollection.doc(auth.currentUser.uid).update({
 						favorite: favoriteSongs.value,
+					});
+					await songsCollection.doc(song.value.docID).update({
+						favorite_count: +song.value.favorite_count - 1,
 					});
 				}
 			} catch (err) {

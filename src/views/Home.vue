@@ -6,9 +6,7 @@
 				<div class="absolute inset-0 w-full h-full bg-contain introduction-bg background"></div>
 				<div class="relative text-white main-header-content z-10">
 					<h1 class="font-bold text-5xl mb-5">Listen to great music</h1>
-					<p class="w-full md:w-8/12 mx-auto">
-						Welcome to this website, this is a place for you to share your favorite music
-					</p>
+					<p class="w-full md:w-8/12 mx-auto">Welcome to this website, this is a place for you to share your favorite music</p>
 				</div>
 			</div>
 			<img class="relative block mx-auto mt-5 -mb-20 w-auto max-w-full" src="../assets/img/introduction-music.png" />
@@ -43,7 +41,7 @@
 				</div>
 				<!-- Playlist -->
 				<ul id="playlist">
-					<SongItem v-for="song in songs" :key="song.docID" :song="song"/>
+					<SongItem v-for="song in songs" :key="song.docID" :song="song" />
 					<div class="font-bold block text-gray-600 text-center py-8" v-if="songs.length === 0 && !pendingRequest">
 						{{ searchItem === "favorite" ? "You do not have a favorite song yet. " : `We do not have this ${searchItem}. Please go to search another keywords or input the full name.` }}
 					</div>
@@ -57,6 +55,7 @@
 </template>
 
 <script>
+import { fromUnixTime, format } from "date-fns";
 import { useStore } from "vuex";
 import SongItem from "../components/SongItem.vue";
 import { ref, onBeforeUnmount, computed, watch } from "vue";
@@ -93,15 +92,16 @@ export default {
 			let snapshots;
 			if (songs.value.length) {
 				const lastDoc = await songsCollection.doc(songs.value[songs.value.length - 1].docID).get();
-				snapshots = await songsCollection.orderBy("modified_name").startAfter(lastDoc).limit(maxPerPage.value).get();
+				snapshots = await songsCollection.orderBy("createdAt", "desc").startAfter(lastDoc).limit(maxPerPage.value).get();
 			} else {
-				snapshots = await songsCollection.orderBy("modified_name").limit(maxPerPage.value).get();
+				snapshots = await songsCollection.orderBy("createdAt", "desc").limit(maxPerPage.value).get();
 			}
 			snapshots.forEach(doc => {
 				songs.value.push({
 					playing: store.getters.getSong.docID === doc.id ? true : false,
 					docID: doc.id,
 					...doc.data(),
+					createdAt: format(fromUnixTime(doc.data().createdAt.seconds), "MM/dd/yyyy"),
 				});
 			});
 
@@ -172,7 +172,7 @@ export default {
 
 			favorite.forEach(async f => {
 				const songSnap = await songsCollection.doc(f).get();
-					songs.value.push(songSnap.data());
+				songs.value.push(songSnap.data());
 			});
 		};
 

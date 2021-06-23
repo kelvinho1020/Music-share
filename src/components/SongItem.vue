@@ -1,12 +1,19 @@
 <template>
 	<li class="flex justify-between items-center p-3 pl-6 cursor-pointer transition duration-300 hover:bg-gray-50" :class="{ 'bg-gray-100': isPlaying }">
 		<div>
-			<router-link :to="{ name: 'Song', params: { id: song.docID } }" class="font-bold block text-gray-600">{{ song.modified_name }} </router-link>
-			<span class="text-gray-500 text-sm">{{ song.display_name }}</span>
+			<router-link :to="{ name: 'Song', params: { id: song.docID } }" class="font-bold block text-gray-600"
+				>{{ song.modified_name }} <span class="text-gray-500 text-sm ml-2">{{ song.display_name }}</span></router-link
+			>
+
+			<span class="text-gray-500 text-sm">{{ song.createdAt }}</span>
 		</div>
 
 		<div class="text-gray-600 text-lg">
-			<i class="fas fa-play mr-4" @click="getSong"></i>
+			<i class="fas fa-play mr-5" @click="getSong"></i>
+			<span class="favorite mr-3">
+				<i class="fas fa-heart text-gray-600"></i>
+				{{ song.favorite_count }}
+			</span>
 			<span class="comments">
 				<i class="fa fa-comments text-gray-600"></i>
 				{{ song.comment_count }}

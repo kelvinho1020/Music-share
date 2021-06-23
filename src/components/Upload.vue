@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { storage, auth, songsCollection } from "@/includes/firebase";
+import { storage, auth, songsCollection, timeStamp } from "@/includes/firebase";
 import { ref, onBeforeUnmount } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
 export default {
@@ -67,6 +67,7 @@ export default {
 
 			files.forEach(file => {
 				if (file.type !== "audio/mpeg" && file.type !== "audio/flac") {
+					uploading.value = false;
 					uploadError.value = true;
 					return;
 				}
@@ -106,6 +107,8 @@ export default {
 							modified_name: task.snapshot.ref.name,
 							description: "",
 							comment_count: 0,
+							createdAt: timeStamp(),
+							favorite_count: 0,
 						};
 
 						try {
