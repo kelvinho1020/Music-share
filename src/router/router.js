@@ -33,9 +33,6 @@ const routes = [
 		path: "/song/:id",
 		name: "Song",
 		component: Song,
-		meta: {
-			title: 'Music-share | Song'
-		},
 	},
 	{
 		path: "/:catchAll(.*)*",

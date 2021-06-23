@@ -70,7 +70,7 @@ import { songsCollection, commentsCollection, usersCollection, auth } from "@/in
 import { useRoute, useRouter } from "vue-router";
 import { computed, ref } from "vue";
 export default {
-	name: 'song',
+	name: "song",
 	setup() {
 		// Router
 		const route = useRoute();
@@ -115,6 +115,8 @@ export default {
 			}
 			song.value = docSnapshot.data();
 			song.value.createdAt = format(fromUnixTime(song.value.createdAt.seconds), "MM/dd/yyyy");
+
+			document.title = `Music-share | ${song.value.modified_name}`;
 		};
 		getSong();
 
