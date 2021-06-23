@@ -15,6 +15,9 @@ const routes = [
 		path: "/",
 		name: "Home",
 		component: Home,
+		meta: {
+			title: 'Music-share | Home'
+		}
 	},
 	{
 		path: "/mange",
@@ -22,6 +25,7 @@ const routes = [
 		component: Mange,
 		meta: {
 			requiresAuth: true,
+			title: 'Music-share | Mange'
 		},
 		beforeEnter: requireAuth,
 	},
@@ -29,10 +33,16 @@ const routes = [
 		path: "/song/:id",
 		name: "Song",
 		component: Song,
+		meta: {
+			title: 'Music-share | Song'
+		},
 	},
 	{
 		path: "/:catchAll(.*)*",
 		redirect: { name: "Home" },
+		meta: {
+			title: 'Music-share | Not Found'
+		},
 	},
 ];
 
@@ -40,5 +50,12 @@ const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
 	routes,
 });
+
+router.beforeEach((to, from, next) => {
+    if (to.meta.title) {
+        document.title = to.meta.title
+    }
+    next();
+})
 
 export default router;

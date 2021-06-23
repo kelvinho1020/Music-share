@@ -70,6 +70,7 @@ import { songsCollection, commentsCollection, usersCollection, auth } from "@/in
 import { useRoute, useRouter } from "vue-router";
 import { computed, ref } from "vue";
 export default {
+	name: 'song',
 	setup() {
 		// Router
 		const route = useRoute();

@@ -42,7 +42,8 @@
 				<!-- Playlist -->
 				<ul id="playlist">
 					<SongItem v-for="song in formatSongs" :key="song.docID" :song="song" />
-					<div class="font-bold block text-gray-600 text-center py-8" v-if="songs.length === 0 && !pendingRequest">
+					<div class="font-bold block text-gray-600 text-center py-8" v-if="totalSongs === 0">We do not have any song yet. Go and become the first one to upload a song !</div>
+					<div class="font-bold block text-gray-600 text-center py-8" v-if="formatSongs.length === 0 && !pendingRequest && totalSongs !== 0">
 						{{ searchItem === "favorite" ? "You do not have a favorite song yet. " : `We do not have this ${searchItem}. Please go to search another keywords or input the full name.` }}
 					</div>
 					<div class="w-full flex justify-center py-6" v-if="pendingRequest">
@@ -192,7 +193,7 @@ export default {
 			window.removeEventListener("scroll", handleScroll);
 		});
 
-		return { formatSongs, songs, getSongs, handleScroll, pendingRequest, searchItem, searchSongs, search, back, isSearching, placeholder, stopPlaying, filterSong, togglePlaying };
+		return { formatSongs, songs, getSongs, handleScroll, pendingRequest, searchItem, searchSongs, search, back, isSearching, placeholder, stopPlaying, filterSong, togglePlaying , totalSongs};
 	},
 };
 </script>
