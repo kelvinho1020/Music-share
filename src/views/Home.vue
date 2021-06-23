@@ -13,8 +13,8 @@
 		</section>
 
 		<!-- Main Content -->
-		<section class="container mx-auto pb-20">
-			<div class="bg-white rounded border border-gray-200 relative flex flex-col dark:bg-gray-600 dark:border-white">
+		<section class="container mx-auto pb-20 px-20">
+			<div class="bg-white rounded border border-gray-200 relative flex flex-col dark:bg-gray-600 dark:border-white ">
 				<div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200 flex justify-between dark:border-white">
 					<span class="card-title cursor-pointer dark:text-white" @click="back">{{ isSearching === false ? "All Songs" : "Back" }}</span>
 					<div>

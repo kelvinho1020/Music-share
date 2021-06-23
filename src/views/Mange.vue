@@ -1,6 +1,6 @@
 <template>
 	<!-- Main Content -->
-	<section class="container mx-auto mt-6">
+	<section class="container mx-auto mt-6 px-20">
 		<div class="grid grid-cols-3 gap-4">
 			<div class="col-span-1">
 				<Upload :addSong="addSong" />

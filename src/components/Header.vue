@@ -1,5 +1,5 @@
 <template>
-	<header id="header" class="bg-gray-50 dark:bg-gray-700 ">
+	<header id="header" class="bg-gray-50 dark:bg-gray-700 px-20">
 		<nav class="container mx-auto px-4 py-5 flex justify-between items-center">
 			<!-- App Name -->
 			<div>

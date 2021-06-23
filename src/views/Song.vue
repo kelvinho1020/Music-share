@@ -3,7 +3,7 @@
 		<!-- Music Header -->
 		<section class="w-full mb-8 py-14 text-center text-white relative">
 			<div class="absolute inset-0 w-full h-full box-border bg-contain" :class="{ 'background-dark': theme === 'dark', 'background-light': theme === 'light' }"></div>
-			<div class="container mx-auto flex items-center w-full justify-between">
+			<div class="container mx-auto flex items-center w-full justify-between px-20">
 				<!-- Play/Pause Button -->
 				<div class="z-10 flex items-center">
 					<button type="button" class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full focus:outline-none" @click="newSong(song)">
@@ -22,7 +22,7 @@
 			</div>
 		</section>
 		<!-- Form -->
-		<section class="container mx-auto mt-6">
+		<section class="container mx-auto mt-6 px-20">
 			<div class="bg-white rounded border border-gray-200 relative flex flex-col dark:bg-gray-600">
 				<div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
 					<!-- Comment Count -->
