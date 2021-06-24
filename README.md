@@ -11,11 +11,11 @@ https://music-share-pro.netlify.app
 ## App first look
 
 ### Home Page
-
+![image](https://github.com/kelvinho1020/Music-share/blob/master/public/music-share1.gif)
 ### Manage Page
-
+![image](https://github.com/kelvinho1020/Music-share/blob/master/public/music-share2.gif)
 ### Content Page
-
+![image](https://github.com/kelvinho1020/Music-share/blob/master/public/music-share3.gif)
 
 ## Project setup
 
@@ -53,12 +53,12 @@ VUE_APP_FIREBASE_APP_ID='XXXXXXXXXXXXXXXXXXXX'
 
 ### Update @/src/includes/firebase.js to your own account
 ```
-	apiKey: process.env.VUE_APP_FIREBASE_API_KEY || "api-key-not-set",
-	authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN || "env-not-set",
-	projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID || "env-not-set",
-	storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET || "env-not-set",
-	messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID || "env-not-set",
-	appId: process.env.VUE_APP_FIREBASE_APP_ID || "env-not-set",
+apiKey: process.env.VUE_APP_FIREBASE_API_KEY || "api-key-not-set",
+authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN || "env-not-set",
+projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID || "env-not-set",
+storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET || "env-not-set",
+messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID || "env-not-set",
+appId: process.env.VUE_APP_FIREBASE_APP_ID || "env-not-set",
 ```
 
 ## Project setup
