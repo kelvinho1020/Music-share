@@ -27,6 +27,7 @@ https://music-share-pro.netlify.app
 - Using [date-fns](https://date-fns.org) to format dates.
 - Using [Font Awesome](https://github.com/FortAwesome/Font-Awesome) to display beautiful icons on the website
 
+### Install
 ```
 npm install
 ```
