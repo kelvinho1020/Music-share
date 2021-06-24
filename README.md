@@ -1,4 +1,4 @@
-# vue-fire-chat
+# Music-share
 This is a music application which can upload, manage and listen to music without interruption. 
 
 ## Demo
