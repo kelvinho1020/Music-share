@@ -25,22 +25,9 @@ https://music-share-pro.netlify.app
 - Using [Tailwindcss](https://tailwindcss.com) CSS framework to style my site in dark mode.
 - Using [Vuex](https://github.com/vuejs/vuex) for state management in Vue.js.
 - Using [date-fns](https://date-fns.org) to format dates.
-- Using [Font Awesome](https://github.com/FortAwesome/Font-Awesome) to display beautiful icons on the website
+- Using [Font Awesome](https://github.com/FortAwesome/Font-Awesome) to display beautiful icons on the website.
+- -Using [Firebase](https://firebase.google.com) as a backend.
 
-### Install
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
 
 ### Store API Key in .env.local file and save
 ```
@@ -61,8 +48,8 @@ storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET || "env-not-set",
 messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID || "env-not-set",
 appId: process.env.VUE_APP_FIREBASE_APP_ID || "env-not-set",
 ```
-### Install
 
+### Install
 ```
 npm install
 ```
