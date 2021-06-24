@@ -51,7 +51,7 @@ VUE_APP_FIREBASE_MESSAGING_SENDER_ID='XXXXXXXXXXXXXXXXXXXX'
 VUE_APP_FIREBASE_APP_ID='XXXXXXXXXXXXXXXXXXXX'
 ```
 
-### Update @/src/includes/firebase.js to your own account
+### or just update @/src/includes/firebase.js to your own account
 ```
 apiKey: process.env.VUE_APP_FIREBASE_API_KEY || "api-key-not-set",
 authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN || "env-not-set",
