@@ -48,7 +48,7 @@
 					<div class="font-bold block text-gray-600 text-center py-8 dark:text-white" v-if="searchItem === 'favorite' && formatSongs.length === 0 && pendingRequest !== true">
 						You do not have any favorite song yet.
 					</div>
-					<div class="font-bold block text-gray-600 text-center py-8 dark:text-white" v-if="searchItem !== 'favorite' && formatSongs.length === 0 && pendingRequest !== true">
+					<div class="font-bold block text-gray-600 text-center py-8 dark:text-white" v-if="searchItem !== 'favorite' && formatSongs.length === 0 && pendingRequest !== true && totalSongs !==0">
 						{{ `We do not have this ${searchItem}. Please try another keywords.` }}
 					</div>
 					<div class="w-full flex justify-center py-6" v-if="pendingRequest">

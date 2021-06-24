@@ -22,7 +22,19 @@
 						<vee-field
 							name="modified_name"
 							type="text"
-							class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded dark:bg-gray-700 dark:text-white dark:focus:border-gray-50"
+							class="
+								block
+								w-full
+								py-1.5
+								px-3
+								text-gray-800
+								border border-gray-300
+								transition
+								duration-500
+								focus:outline-none focus:border-black
+								rounded
+								dark:bg-gray-700 dark:text-white dark:focus:border-gray-50
+							"
 							placeholder="Enter Song Title"
 							v-model="mdName"
 						/>
@@ -34,7 +46,19 @@
 							as="textarea"
 							name="description"
 							type="text"
-							class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded dark:bg-gray-700 dark:text-white dark:focus:border-gray-50"
+							class="
+								block
+								w-full
+								py-1.5
+								px-3
+								text-gray-800
+								border border-gray-300
+								transition
+								duration-500
+								focus:outline-none focus:border-black
+								rounded
+								dark:bg-gray-700 dark:text-white dark:focus:border-gray-50
+							"
 							placeholder="Enter description"
 							v-model="description"
 						/>
@@ -117,13 +141,11 @@ export default {
 			if (!result) return;
 
 			const storageRef = storage.ref();
-			const songRef = storageRef.child(`songs/${prop.song.original_name}`);
+			const songRef = storageRef.child(`songs/${auth.currentUser.uid}/${prop.song.docID}`);
 
 			loading.value = true;
 
-			if (!songRef) {
-				await songRef.delete();
-			}
+			await songRef.delete();
 			await songsCollection.doc(prop.song.docID).delete();
 
 			const snapshot = await usersCollection.doc(auth.currentUser.uid).get();

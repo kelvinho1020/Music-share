@@ -31,6 +31,7 @@
 				<h5>Drop your files here</h5>
 			</div>
 			<div class="font-bold block text-red-600 text-center pt-6" v-if="uploadError">Please upload a mp3 or flac</div>
+			<div class="font-bold block text-red-600 text-center pt-6" v-if="alreadyHaveFile === true">You have already uploaded this file.</div>
 			<hr class="my-6" />
 
 			<!-- Progess Bars -->
@@ -60,82 +61,84 @@ export default {
 		const uploads = ref([]);
 		const uploadError = ref(false);
 		const uploading = ref(false);
+		const alreadyHaveFile = ref(false);
 
-		const upload = function (event) {
+		const upload = async function (event) {
 			uploading.value = true;
 			is_dragover.value = false;
 			uploadError.value = false;
 
 			const files = event.dataTransfer.files ? [...event.dataTransfer.files] : [...event.target.files];
 
-			files.forEach(file => {
+			for (let file of files) {
 				if (file.type !== "audio/mpeg" && file.type !== "audio/flac") {
 					uploading.value = false;
 					uploadError.value = true;
 					return;
 				}
 
-				const storageRef = storage.ref(); //music-xxxxx.appspot.com <= root
-				const songsRef = storageRef.child(`songs/${file.name}`); //music-xxxxx.appspot.com/songs/example.mp3 <= sub
-				const task = songsRef.put(file); // upload file
+				const song = {
+					uid: auth.currentUser.uid,
+					display_name: auth.currentUser.displayName,
+					original_name: file.name,
+					modified_name: file.name,
+					description: "",
+					comment_count: 0,
+					createdAt: timeStamp(),
+					favorite_count: 0,
+				};
 
-				const uploadIndex =
-					uploads.value.push({
-						task,
-						current_progress: 0,
-						name: file.name,
-						variant: "bg-blue-400",
-						icon: "fas fa-spinner fa-spin",
-						text_class: "",
-					}) - 1; // push return length therefore want index needs minus 1
+				try {
+					const songRef = await songsCollection.add(song);
+					const storageRef = storage.ref(); //music-xxxxx.appspot.com <= root
+					const songsRef = storageRef.child(`songs/${auth.currentUser.uid}/${songRef.id}`); //music-xxxxx.appspot.com/songs/example.mp3 <= sub
 
-				// upload task <= three function ( upload, error, success )
-				task.on(
-					"state_changed",
-					snapshot => {
-						const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-						uploads.value[uploadIndex].current_progress = progress;
-					},
-					err => {
-						uploads.value[uploadIndex].variant = "bg-red-400";
-						uploads.value[uploadIndex].icon = "fas fa-times";
-						uploads.value[uploadIndex].text_class = "text-red-400";
-						console.log(err);
-					},
-					async () => {
-						const song = {
-							uid: auth.currentUser.uid,
-							display_name: auth.currentUser.displayName,
-							original_name: task.snapshot.ref.name,
-							modified_name: task.snapshot.ref.name,
-							description: "",
-							comment_count: 0,
-							createdAt: timeStamp(),
-							favorite_count: 0,
-						};
+					const task = songsRef.put(file); // upload file
 
-						try {
-							song.url = await task.snapshot.ref.getDownloadURL(); // we get the path of the file
-							const songRef = await songsCollection.add(song);
+					const uploadIndex =
+						uploads.value.push({
+							task,
+							current_progress: 0,
+							name: file.name,
+							variant: "bg-blue-400",
+							icon: "fas fa-spinner fa-spin",
+							text_class: "",
+						}) - 1; // push return length therefore want index needs minus 1
 
-							await songRef.update({
-								docID: songRef.id,
-							});
+					// upload task <= three function ( upload, error, success )
+					task.on(
+						"state_changed",
+						snapshot => {
+							const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+							uploads.value[uploadIndex].current_progress = progress;
+						},
+						() => {
+							uploads.value[uploadIndex].variant = "bg-red-400";
+							uploads.value[uploadIndex].icon = "fas fa-times";
+							uploads.value[uploadIndex].text_class = "text-red-400";
+						},
+						async () => {
+							try {
+								const url = await task.snapshot.ref.getDownloadURL(); // we get the path of the file
 
-							const songSnapshot = await songRef.get();
-							prop.addSong(songSnapshot);
-
-							uploads.value[uploadIndex].variant = "bg-green-400";
-							uploads.value[uploadIndex].icon = "fas fa-check";
-							uploads.value[uploadIndex].text_class = "text-green-400";
-						} catch (err) {
-							console.log(err);
-						} finally {
-							uploading.value = false;
+								await songRef.update({
+									docID: songRef.id,
+									url: url,
+								});
+							} finally {
+								const songSnapshot = await songRef.get();
+								prop.addSong(songSnapshot);
+								uploading.value = false;
+								uploads.value[uploadIndex].variant = "bg-green-400";
+								uploads.value[uploadIndex].icon = "fas fa-check";
+								uploads.value[uploadIndex].text_class = "text-green-400";
+							}
 						}
-					}
-				);
-			});
+					);
+				} catch (err) {
+					console.log(err);
+				}
+			}
 		};
 
 		onBeforeRouteLeave((to, from, next) => {
@@ -157,7 +160,7 @@ export default {
 			});
 		});
 
-		return { is_dragover, upload, uploads, uploadError };
+		return { is_dragover, upload, uploads, uploadError, alreadyHaveFile };
 	},
 };
 </script>
