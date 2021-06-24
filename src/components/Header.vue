@@ -39,7 +39,7 @@
 							"
 							@click="toggleTheme"
 						>
-							{{ theme }}
+							<i class="fas fa-moon" :class="{ 'fa-moon': theme === 'dark', 'fa-sun': theme === 'light' }"></i>
 						</button>
 					</li>
 				</ul>

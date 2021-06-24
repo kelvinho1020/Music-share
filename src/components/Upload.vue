@@ -117,8 +117,12 @@ export default {
 						try {
 							song.url = await task.snapshot.ref.getDownloadURL(); // we get the path of the file
 							const songRef = await songsCollection.add(song);
-							const songSnapshot = await songRef.get();
 
+							await songRef.update({
+								docID: songRef.id,
+							});
+
+							const songSnapshot = await songRef.get();
 							prop.addSong(songSnapshot);
 
 							uploads.value[uploadIndex].variant = "bg-green-400";

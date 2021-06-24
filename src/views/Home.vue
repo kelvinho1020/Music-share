@@ -14,7 +14,7 @@
 
 		<!-- Main Content -->
 		<section class="container mx-auto pb-20 px-20">
-			<div class="bg-white rounded border border-gray-200 relative flex flex-col dark:bg-gray-600 dark:border-white ">
+			<div class="bg-white rounded border border-gray-200 relative flex flex-col dark:bg-gray-600 dark:border-white">
 				<div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200 flex justify-between dark:border-white">
 					<span class="card-title cursor-pointer dark:text-white" @click="back">{{ isSearching === false ? "All Songs" : "Back" }}</span>
 					<div>
@@ -32,8 +32,8 @@
 							<label for="searchUser" class="ml-1 dark:text-white">User</label>
 							<input type="radio" name="search" value="song" class="ml-3" id="searchSong" v-model="searchItem" />
 							<label for="searchSong" class="ml-1 dark:text-white">Song</label>
-							<input type="radio" name="search" value="favorite" class="ml-3" id="searchSong" v-model="searchItem" :change="filterSong" />
-							<label for="searchSong" class="ml-1 dark:text-white">My favorite</label>
+							<input type="radio" name="search" value="favorite" class="ml-3" id="searchSong" v-model="searchItem" :change="filterSong" v-if="haveUser" />
+							<label for="searchSong" class="ml-1 dark:text-white" v-if="haveUser">My favorite</label>
 						</div>
 					</div>
 					<!-- Icon -->
@@ -42,9 +42,10 @@
 				<!-- Playlist -->
 				<ul id="playlist">
 					<SongItem v-for="song in formatSongs" :key="song.docID" :song="song" />
-					<div class="font-bold block text-gray-600 text-center py-8" v-if="totalSongs === 0">We do not have any song yet. Go and become the first one to upload a song !</div>
-					<div class="font-bold block text-gray-600 text-center py-8" v-if="formatSongs.length === 0 && !pendingRequest && totalSongs !== 0">
-						{{ searchItem === "favorite" ? "You do not have a favorite song yet. " : `We do not have this ${searchItem}. Please go to search another keywords or input the full name.` }}
+					<div class="font-bold block text-gray-600 text-center py-8 dark:text-white" v-if="totalSongs === 0">We do not have any song yet. Go and become the first one to upload a song !</div>
+					<div class="font-bold block text-gray-600 text-center py-8 dark:text-white" v-if="searchItem === 'favorite' && formatSongs.length === 0">You do not have any favorite song yet.</div>
+					<div class="font-bold block text-gray-600 text-center py-8 dark:text-white" v-if="searchItem !== 'favorite' && formatSongs.length === 0">
+						{{ `We do not have this ${searchItem}. Please use other keywords or enter full name.` }}
 					</div>
 					<div class="w-full flex justify-center py-6" v-if="pendingRequest">
 						<img src="../assets/svg/loading.svg" alt="loading" />
@@ -78,6 +79,7 @@ export default {
 		const isSearching = ref(false);
 
 		const theme = computed(() => store.getters.getTheme);
+		const haveUser = computed(() => store.getters.getUserLoggedIn);
 
 		// format time
 		const formatSongs = computed(() =>
@@ -176,11 +178,17 @@ export default {
 			isSearching.value = true;
 			const snapshot = await usersCollection.doc(auth.currentUser.uid).get();
 			const favorite = snapshot.data().favorite;
+			let newFavorite = [];
 			songs.value = [];
 
-			favorite.forEach(async f => {
+			await favorite.forEach(async f => {
 				const songSnap = await songsCollection.doc(f).get();
-				songs.value.push(songSnap.data());
+				if (songSnap.data()) {
+					songs.value.push(songSnap.data());
+					newFavorite.push(f);
+				} else {
+					await usersCollection.doc(auth.currentUser.uid).update({ favorite: newFavorite });
+				}
 			});
 		};
 
@@ -195,7 +203,25 @@ export default {
 			window.removeEventListener("scroll", handleScroll);
 		});
 
-		return { formatSongs, songs, getSongs, handleScroll, pendingRequest, searchItem, searchSongs, search, back, isSearching, placeholder, stopPlaying, filterSong, togglePlaying, totalSongs, theme };
+		return {
+			haveUser,
+			formatSongs,
+			songs,
+			getSongs,
+			handleScroll,
+			pendingRequest,
+			searchItem,
+			searchSongs,
+			search,
+			back,
+			isSearching,
+			placeholder,
+			stopPlaying,
+			filterSong,
+			togglePlaying,
+			totalSongs,
+			theme,
+		};
 	},
 };
 </script>

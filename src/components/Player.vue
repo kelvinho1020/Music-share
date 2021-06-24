@@ -14,7 +14,7 @@
 			<!-- Scrub -->
 			<div class="float-left w-7 h-7 leading-3 ml-6 mt-2 player-scrub">
 				<div class="absolute left-0 right-5 text-lg text-center mx-auto player-song-info">
-					<span class="song-title text-white dark:text-gray-800">{{ song.modified_name }}</span>
+					<span class="song-title text-white dark:text-gray-700 font-bold">{{ song.modified_name }}</span>
 				</div>
 				<!-- Scrub Container  -->
 				<span class="block w-full h-2 rounded m-1 mt-2 bg-gray-200 relative cursor-pointer" @click.prevent="updateSeek($event)">

@@ -83,7 +83,7 @@ export default {
 
 		const schema = ref({
 			modified_name: "required_song_title|min:1|max:30|",
-			genre: "alpha_spaces",
+			description: "|max:300|",
 		});
 
 		const edit = async function (values) {

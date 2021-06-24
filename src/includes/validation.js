@@ -21,12 +21,12 @@ export default {
 		configure({
 			generateMessage: ctx => {
 				const messages = {
-					required: `The field ${ctx.field} is required`,
-					min: `The field ${ctx.field} is too short`,
-					max: `The field ${ctx.field} is too long`,
-					alpha_spaces: `The field ${ctx.field} may only contain alphabetical characters`,
-					min_value: `The field ${ctx.field} is too low`,
-					max_value: `The field ${ctx.field} is too high`,
+					required: `${ctx.field} is required`,
+					min: `${ctx.field} is too short`,
+					max: `${ctx.field} is too long`,
+					alpha_spaces: `${ctx.field} may only contain alphabetical characters`,
+					min_value: `${ctx.field} is too low`,
+					max_value: `${ctx.field} is too high`,
 					passwords_mismatch: "The passwords don't match",
 					tos: `You must accept the Terms of Service`,
 					required_song_title: `You need to enter a song name`

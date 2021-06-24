@@ -5,14 +5,14 @@
 			<div class="absolute inset-0 w-full h-full box-border bg-contain" :class="{ 'background-dark': theme === 'dark', 'background-light': theme === 'light' }"></div>
 			<div class="container mx-auto flex items-center w-full justify-between px-20">
 				<!-- Play/Pause Button -->
-				<div class="z-10 flex items-center">
+				<div class="z-10 flex items-center w-full">
 					<button type="button" class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full focus:outline-none" @click="newSong(song)">
 						<i class="fas fa-play"></i>
 					</button>
-					<div class="z-50 text-left ml-8">
+					<div class="z-50 text-left ml-8 w-3/4">
 						<!-- Song Info -->
 						<div class="text-3xl font-bold">{{ song.modified_name }}</div>
-						<div>{{ song.description }}</div>
+						<div class='break-all'>{{ song.description }}</div>
 						<div>{{ song.createdAt }}</div>
 					</div>
 				</div>
@@ -50,8 +50,8 @@
 			</div>
 		</section>
 		<!-- Comments -->
-		<ul class="container mx-auto mb-20 ">
-			<li class="p-6 bg-gray-50 border border-gray-200 dark:bg-gray-600 dark:text-white" v-for="comment in sortedComments" :key="comment.docID">
+		<ul class="container mx-auto mb-20 px-20 ">
+			<li class="p-6 bg-white border border-gray-200 dark:bg-gray-600 dark:text-white w-full break-all" v-for="comment in sortedComments" :key="comment.docID">
 				<!-- Comment Author -->
 				<div class="mb-3">
 					<div class="font-bold">{{ comment.name }}</div>
@@ -93,7 +93,7 @@ export default {
 		});
 
 		const schema = {
-			comment: "required|min:3",
+			comment: "required|min:3|max:300",
 		};
 
 		const submission = ref(false);
@@ -197,7 +197,7 @@ export default {
 						favorite: favoriteSongs.value,
 					});
 
-					await songsCollection.doc(song.value.docID).update({
+					await songsCollection.doc(route.params.id).update({
 						favorite_count: +song.value.favorite_count + 1,
 					});
 				} else {
@@ -205,7 +205,7 @@ export default {
 					await usersCollection.doc(auth.currentUser.uid).update({
 						favorite: favoriteSongs.value,
 					});
-					await songsCollection.doc(song.value.docID).update({
+					await songsCollection.doc(route.params.id).update({
 						favorite_count: +song.value.favorite_count - 1,
 					});
 				}
