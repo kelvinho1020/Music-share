@@ -118,7 +118,7 @@ export default {
 			song.value = docSnapshot.data();
 			song.value.createdAt = format(fromUnixTime(song.value.createdAt.seconds), "MM/dd/yyyy");
 
-			document.title = `Music-share | ${song.value.modified_name}`;
+			document.title = `${song.value.modified_name} | Music-share`;
 		};
 		getSong();
 

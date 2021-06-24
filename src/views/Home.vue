@@ -28,10 +28,10 @@
 						/>
 						<i class="fa fa-search text-gray-400 cursor-pointer ml-1 dark:text-white" @click="searchSongs" v-show="searchItem !== 'favorite'"></i>
 						<div class="inline-block ml-5">
-							<input type="radio" name="search" value="user" class="ml-3" id="searchUser" v-model="searchItem" />
-							<label for="searchUser" class="ml-1 dark:text-white">User</label>
 							<input type="radio" name="search" value="song" class="ml-3" id="searchSong" v-model="searchItem" />
 							<label for="searchSong" class="ml-1 dark:text-white">Song</label>
+							<input type="radio" name="search" value="user" class="ml-3" id="searchUser" v-model="searchItem" />
+							<label for="searchUser" class="ml-1 dark:text-white">User</label>
 							<input type="radio" name="search" value="favorite" class="ml-3" id="searchSong" v-model="searchItem" :change="filterSong" v-if="haveUser" />
 							<label for="searchSong" class="ml-1 dark:text-white" v-if="haveUser">My favorite</label>
 						</div>
@@ -42,10 +42,14 @@
 				<!-- Playlist -->
 				<ul id="playlist">
 					<SongItem v-for="song in formatSongs" :key="song.docID" :song="song" />
-					<div class="font-bold block text-gray-600 text-center py-8 dark:text-white" v-if="totalSongs === 0">We do not have any song yet. Go and become the first one to upload a song !</div>
-					<div class="font-bold block text-gray-600 text-center py-8 dark:text-white" v-if="searchItem === 'favorite' && formatSongs.length === 0">You do not have any favorite song yet.</div>
-					<div class="font-bold block text-gray-600 text-center py-8 dark:text-white" v-if="searchItem !== 'favorite' && formatSongs.length === 0">
-						{{ `We do not have this ${searchItem}. Please use other keywords or enter full name.` }}
+					<div class="font-bold block text-gray-600 text-center py-8 dark:text-white" v-if="totalSongs === 0 && pendingRequest !== true">
+						We do not have any song yet. Go and become the first one to upload a song !
+					</div>
+					<div class="font-bold block text-gray-600 text-center py-8 dark:text-white" v-if="searchItem === 'favorite' && formatSongs.length === 0 && pendingRequest !== true">
+						You do not have any favorite song yet.
+					</div>
+					<div class="font-bold block text-gray-600 text-center py-8 dark:text-white" v-if="searchItem !== 'favorite' && formatSongs.length === 0 && pendingRequest !== true">
+						{{ `We do not have this ${searchItem}. Please try another keywords.` }}
 					</div>
 					<div class="w-full flex justify-center py-6" v-if="pendingRequest">
 						<img src="../assets/svg/loading.svg" alt="loading" />
@@ -75,7 +79,7 @@ export default {
 		const pendingRequest = ref(false);
 
 		const search = ref("");
-		const searchItem = ref("user");
+		const searchItem = ref("song");
 		const isSearching = ref(false);
 
 		const theme = computed(() => store.getters.getTheme);
@@ -120,30 +124,40 @@ export default {
 		getSongs();
 
 		// search songs
+		const updateSearchSong = function (snap, searchItem) {
+			if (search.value === "") return;
+
+			snap.forEach(doc => {
+				if (doc.data()[searchItem].toLowerCase().includes(search.value.toLowerCase())) {
+					songs.value.push({
+						playing: store.getters.getSong.docID === doc.id ? true : false,
+						docID: doc.id,
+						...doc.data(),
+					});
+				}
+			});
+		};
+
 		const searchSongs = async function () {
+			pendingRequest.value = true;
 			isSearching.value = true;
+			songs.value = [];
 
 			let snapshots;
 			if (searchItem.value === "user") {
-				snapshots = await songsCollection.where("display_name", "==", search.value).get();
+				snapshots = await songsCollection.get();
+				updateSearchSong(snapshots, "display_name");
 			} else if (searchItem.value === "song") {
-				snapshots = await songsCollection.where("modified_name", "==", search.value).get();
+				snapshots = await songsCollection.get();
+				updateSearchSong(snapshots, "modified_name");
 			}
-
-			songs.value = [];
-			snapshots.forEach(doc => {
-				songs.value.push({
-					playing: store.getters.getSong.docID === doc.id ? true : false,
-					docID: doc.id,
-					...doc.data(),
-				});
-			});
+			pendingRequest.value = false;
 		};
 
 		// go back
 		const back = async function () {
 			isSearching.value = false;
-			searchItem.value = "user";
+			searchItem.value = "song";
 			songs.value = [];
 			getSongs();
 		};
@@ -175,13 +189,16 @@ export default {
 
 		// filter favorite song
 		const filterSong = async function () {
+			pendingRequest.value = true;
 			isSearching.value = true;
+
 			const snapshot = await usersCollection.doc(auth.currentUser.uid).get();
 			const favorite = snapshot.data().favorite;
 			let newFavorite = [];
 			songs.value = [];
 
-			await favorite.forEach(async f => {
+			// note: can't use await forEach
+			for (const f of favorite) {
 				const songSnap = await songsCollection.doc(f).get();
 				if (songSnap.data()) {
 					songs.value.push(songSnap.data());
@@ -189,7 +206,8 @@ export default {
 				} else {
 					await usersCollection.doc(auth.currentUser.uid).update({ favorite: newFavorite });
 				}
-			});
+			}
+			pendingRequest.value = false;
 		};
 
 		watch(searchItem, value => {

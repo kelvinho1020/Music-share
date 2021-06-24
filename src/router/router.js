@@ -16,7 +16,7 @@ const routes = [
 		name: "Home",
 		component: Home,
 		meta: {
-			title: 'Music-share | Home'
+			title: 'Home | Music-share'
 		}
 	},
 	{
@@ -25,7 +25,7 @@ const routes = [
 		component: Mange,
 		meta: {
 			requiresAuth: true,
-			title: 'Music-share | Manage'
+			title: 'Manage | Music-share'
 		},
 		beforeEnter: requireAuth,
 	},
