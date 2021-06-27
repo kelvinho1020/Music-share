@@ -141,11 +141,16 @@ export default {
 			if (!result) return;
 
 			const storageRef = storage.ref();
-			const songRef = storageRef.child(`songs/${auth.currentUser.uid}/${prop.song.docID}`);
+			const songRef = storageRef.child(`songs/${auth.currentUser.uid}/${prop.song.original_name}`);
+
+			const songSnap = await songsCollection.where("modified_name", "==", prop.song.original_name).get();
 
 			loading.value = true;
 
-			await songRef.delete();
+			// if we have other same file won't delete the storage
+			if (songSnap.size <= 1) {
+				await songRef.delete();
+			}
 			await songsCollection.doc(prop.song.docID).delete();
 
 			const snapshot = await usersCollection.doc(auth.currentUser.uid).get();
@@ -162,8 +167,8 @@ export default {
 				favorite: updateFavorite,
 			});
 
-			loading.value = false;
 			prop.removeSong(prop.index, prop.song.docID);
+			loading.value = false;
 		};
 
 		return { schema, showForm, submitting, showAlert, alertClass, alertMsg, edit, deleteSong, loading, mdName, description };
