@@ -50,12 +50,17 @@
 
 <script>
 import { storage, auth, songsCollection, timeStamp } from "@/includes/firebase";
-import { ref, onBeforeUnmount } from "vue";
+import { ref, onBeforeUnmount, watch, computed } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
+import { useStore } from "vuex";
 export default {
 	name: "upload",
 	props: ["addSong"],
 	setup(prop) {
+		// Vuex
+		const store = useStore();
+		const getUserLoggedIn = computed(() => store.getters.getUserLoggedIn);
+
 		const is_dragover = ref(false);
 		const uploads = ref([]);
 		const uploadError = ref(false);
@@ -128,8 +133,16 @@ export default {
 			});
 		};
 
+		watch(getUserLoggedIn, logIn => {
+			if (logIn === false) {
+				uploads.value.forEach(file => {
+					file.task.cancel();
+				});
+			}
+		});
+
 		onBeforeRouteLeave((to, from, next) => {
-			if (uploading.value) {
+			if (uploading.value && getUserLoggedIn.value === true) {
 				const result = confirm("You have to wait your upload finish before leaving, are you sure to leave now?");
 				if (result) {
 					next();

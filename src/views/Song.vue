@@ -16,7 +16,7 @@
 						<div>{{ song.createdAt }}</div>
 					</div>
 				</div>
-				<button type="button" class="z-50 h-24 w-24 text-3xl focus:outline-none" @click="addFavorites">
+				<button type="button" class="z-50 h-24 w-24 text-3xl focus:outline-none" @click="addFavorites" v-if="getUserLoggedIn">
 					<i class="fa-heart" :class="{ fas: isFavorite, far: !isFavorite }"></i>
 				</button>
 			</div>
